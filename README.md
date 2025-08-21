@@ -33,10 +33,14 @@ It takes some time to build the QuickFIX/J project.
 ## Run the examples
 
 ### Example Server
-`java -jar target/simple-server-spring-3.jar` or `cd simple-server-spring-3 && mvn spring-boot:run`
+`cd simple-server-spring-3 && java -jar target/simple-server-spring-3.jar` or 
+
+`cd simple-server-spring-3 && mvn spring-boot:run`
 
 ### Example Client
-`java -jar target/simple-client-spring-3.jar` or `cd simple-client-spring-3 && mvn spring-boot:run`
+`cd simple-server-spring-3 && java -jar target/simple-client-spring-3.jar` or 
+
+`cd simple-client-spring-3 && mvn spring-boot:run`
 
 ## Connect the example client to CDNA environments
 
