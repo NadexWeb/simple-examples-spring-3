@@ -46,3 +46,5 @@ It takes some time to build the QuickFIX/J project.
 
 Update the QuickFIX/J configuration options using the details provided by CDNA and run the client as above.
 
+![component-diagram](./src/main/puml/plantuml-component.png)
+

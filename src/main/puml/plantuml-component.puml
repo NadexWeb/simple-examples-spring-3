@@ -1,0 +1,29 @@
+@startuml
+
+title Components - FIX Client Example
+
+frame CDNA {
+
+  node "Trade Gateway Host" as TH {
+  [Trade Gateway] as TG
+}
+
+node "PreTrade Gateway Host" as PTH {
+  [PreTrade Gateway] as PTG
+}
+
+}
+
+node "FIX Client Host" as LTH {
+    [<<Initiator>> FIX Client] as LTC
+}
+
+note top of LTC
+  <<Environment>>
+  PASSWORD
+end note
+
+LTC->PTG
+LTC->TG
+
+@enduml

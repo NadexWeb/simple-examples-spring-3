@@ -38,6 +38,8 @@
 		<quickfixj-spring-boot-starter.version>2.17.2-SNAPSHOT</quickfixj-spring-boot-starter.version>
 		<cdna-qfj.version>3.6.0-SNAPSHOT</cdna-qfj.version>
 		<quickfixj-spring-boot.version>2.17.1</quickfixj-spring-boot.version>
+		<plantuml-maven-plugin.version>1.2</plantuml-maven-plugin.version>
+		<plantuml.version>1.2023.6</plantuml.version>
 	</properties>
 
 	<dependencyManagement>
@@ -156,6 +158,28 @@
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
+			<plugin>
+				<!-- run "echo" to generate
+					diagrams in target, graphviz must be installed -->
+				<groupId>com.github.jeluard</groupId>
+				<artifactId>plantuml-maven-plugin</artifactId>
+				<configuration>
+					<sourceFiles>
+						<directory>${project.basedir}</directory>
+						<includes>
+							<include>**/*.puml</include>
+						</includes>
+					</sourceFiles>
+					<outputInSourceDirectory>true</outputInSourceDirectory>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>net.sourceforge.plantuml</groupId>
+						<artifactId>plantuml</artifactId>
+						<version>${plantuml.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -178,6 +202,18 @@
 						<releaseProfiles>release</releaseProfiles>
 						<goals>deploy</goals>
 					</configuration>
+				</plugin>
+				<plugin>
+					<!-- mvn com.github.jeluard:plantuml-maven-plugin:generate -->
+					<groupId>com.github.jeluard</groupId>
+					<artifactId>plantuml-maven-plugin</artifactId>
+					<version>${plantuml-maven-plugin.version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>net.sourceforge.plantuml</groupId>
+							<artifactId>plantuml</artifactId>
+						</dependency>
+					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>
