@@ -4,11 +4,56 @@ spring:
 
 quickfixj:
   client:
-    config: ${QUIICKFIXJ_CLIENT_CONFIG_FILE:classpath:quickfixj-client.cfg}
     jmx-enabled: true
+    log-factory: slf4j
+    message-store-factory: noop
+    configString: |
+      [default]
+      BeginString=FIXT.1.1
+      DefaultApplVerID=FIX.5.0SP2
+      UseDataDictionary=Y
+      TransportDataDictionary=FIXT11.xml
+      AppDataDictionary.FIX.5.0SP2=FIX50SP2.modified.xml
+      ResetOnLogon=Y
+      ResetOnLogout=Y
+      ResetOnDisconnect=Y
+      ValidateUnorderedGroupFields=N
+      ValidateUserDefinedFields=N
+      CheckLatency=N
+      HeartBtInt=30
+      PersistMessages=N
+      
+      ConnectionType=initiator
+      ReconnectInterval=5
+      
+      [session]
+      SenderCompID=BANZAI
+      TargetCompID=EXEC
+      SocketConnectHost=localhost      
+      SocketConnectPort=9881
+      LogonTag=553=${app.session.username}
+      LogonTag1=554=${password}
+      TimeZone=Europe/London
+      StartTime=17:55:00
+      EndTime=17:50:00
 
 server:
   port: 8081
+
+app:
+  session:
+    username: CRYPTO
+    password: ${PASSWORD}
+
+logging:
+  group:
+    fix: quickfix.ThreadedSocketInitiator, quickfixj.msg.incoming, quickfixj.msg.outgoing
+    nadex: com.nadex
+    allune: com.allune
+  level:
+    fix: INFO
+    nadex: DEBUG
+    allune: INFO
 
 management:
   endpoint:
@@ -18,10 +63,3 @@ management:
     web:
       exposure:
         include: quickfixjclient
-
-logging:
-  file:
-    name: target/logs/client.log
-  pattern:
-    file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:%5p} ${PID: } --- [%t] %-40.40logger{39} : %replace(%msg){'(\u0001)','|'}%n${LOG_EXCEPTION_CONVERSION_WORD:%rEx{5}}}"
-    console: "${CONSOLE_LOG_PATTERN:%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID: }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %replace(%msg){'(\u0001)','|'}%n${LOG_EXCEPTION_CONVERSION_WORD:%rEx{5}}}"

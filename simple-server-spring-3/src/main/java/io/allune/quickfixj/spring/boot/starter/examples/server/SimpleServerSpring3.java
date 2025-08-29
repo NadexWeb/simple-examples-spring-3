@@ -51,8 +51,4 @@ public class SimpleServerSpring3 {
 				serverLogFactory, serverMessageFactory);
 	}
 
-	@Bean
-	public LogFactory serverLogFactory(SessionSettings serverSessionSettings) {
-		return new FileLogFactory(serverSessionSettings);
-	}
 }

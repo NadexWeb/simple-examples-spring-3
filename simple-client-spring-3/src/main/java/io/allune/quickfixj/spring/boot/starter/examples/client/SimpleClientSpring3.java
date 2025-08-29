@@ -56,9 +56,4 @@ public class SimpleClientSpring3 {
 //		return new ThreadedSocketInitiator(clientApplication, clientMessageStoreFactory, clientSessionSettings,
 //				clientLogFactory, clientMessageFactory);
 //	}
-
-	@Bean
-	public LogFactory clientLogFactory(SessionSettings clientSessionSettings) {
-		return new FileLogFactory(clientSessionSettings);
-	}
 }
