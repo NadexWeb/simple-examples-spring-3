@@ -44,6 +44,21 @@ app:
   session:
     username: CRYPTO
     password: ${PASSWORD}
+  filter:
+    # filters are additive
+    # instruments not matching all the specified filter criteria are omitted from the test
+    # filter criteria may be left blank
+    underlyingSymbols:
+      - BTC
+      - ETHER
+    products:
+      - 112
+    symbolRegularExpressions:
+      - .*ETHER.*
+    periods: # I, D, W, M, O
+      - D
+      - W
+      - I
 
 logging:
   group:

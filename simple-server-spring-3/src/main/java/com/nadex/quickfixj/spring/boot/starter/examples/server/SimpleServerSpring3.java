@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.allune.quickfixj.spring.boot.starter.examples.server;
+package com.nadex.quickfixj.spring.boot.starter.examples.server;
 
 import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJServer;
 import org.springframework.boot.SpringApplication;

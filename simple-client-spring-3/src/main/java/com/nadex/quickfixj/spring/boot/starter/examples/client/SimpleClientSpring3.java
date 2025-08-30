@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.allune.quickfixj.spring.boot.starter.examples.client;
+package com.nadex.quickfixj.spring.boot.starter.examples.client;
 
 import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import quickfix.Application;
 import quickfix.FileLogFactory;
 import quickfix.LogFactory;
 import quickfix.SessionSettings;
-import quickfix.fix41.MessageCracker;
+import quickfix.fix50sp2.MessageCracker;
+import com.nadex.quickfixj.spring.boot.starter.examples.client.filter.FilterProperties;
 
 @Slf4j
 @EnableQuickFixJClient
 @SpringBootApplication
+@EnableConfigurationProperties({FilterProperties.class})
 public class SimpleClientSpring3 {
 
 	public static void main(String[] args) {
@@ -41,8 +44,8 @@ public class SimpleClientSpring3 {
 	}
 
 	@Bean
-	public MessageCracker messageCracker() {
-		return new ApplicationMessageCracker();
+	public MessageCracker messageCracker(FilterProperties filterProperties) {
+		return new ApplicationMessageCracker(filterProperties);
 	}
 
 //	@Bean

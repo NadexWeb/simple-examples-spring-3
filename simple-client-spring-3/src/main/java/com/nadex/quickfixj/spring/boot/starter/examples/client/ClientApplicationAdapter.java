@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.allune.quickfixj.spring.boot.starter.examples.client;
+package com.nadex.quickfixj.spring.boot.starter.examples.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +21,11 @@ import quickfix.Application;
 import quickfix.FieldNotFound;
 import quickfix.IncorrectTagValue;
 import quickfix.Message;
+import quickfix.Session;
+import quickfix.SessionNotFound;
 import quickfix.SessionID;
 import quickfix.UnsupportedMessageType;
-import quickfix.fix41.MessageCracker;
+import quickfix.fix50sp2.MessageCracker;
 
 public class ClientApplicationAdapter implements Application {
 
@@ -59,6 +61,12 @@ public class ClientApplicationAdapter implements Application {
 	@Override
 	public void onLogon(SessionID sessionId) {
 		log.info("onLogon: SessionId={}", sessionId);
+		try {
+			Session.sendToTarget(SecurityListRequestFactory.securityListRequest(), sessionId);
+		} catch (SessionNotFound e) {
+			String message = String.format("SessionNotFound exception for Session that just logged on: %s", sessionId);
+			log.error(message);
+		}
 	}
 
 	@Override
