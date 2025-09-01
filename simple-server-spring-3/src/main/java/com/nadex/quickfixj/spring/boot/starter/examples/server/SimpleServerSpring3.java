@@ -15,6 +15,7 @@
  */
 package com.nadex.quickfixj.spring.boot.starter.examples.server;
 
+import com.nadex.quickfixj.spring.boot.starter.examples.server.domain.InstrumentsFromProperties;
 import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,9 +23,9 @@ import org.springframework.context.annotation.Bean;
 import quickfix.Acceptor;
 import quickfix.Application;
 import quickfix.ConfigError;
-import quickfix.FileLogFactory;
 import quickfix.LogFactory;
 import quickfix.MessageFactory;
+import quickfix.fix50sp2.MessageCracker;
 import quickfix.MessageStoreFactory;
 import quickfix.SessionSettings;
 import quickfix.ThreadedSocketAcceptor;
@@ -38,8 +39,8 @@ public class SimpleServerSpring3 {
 	}
 
 	@Bean
-	public Application serverApplication() {
-		return new ServerApplicationAdapter();
+	public Application serverApplication(MessageCracker messageCracker) {
+		return new ServerApplicationAdapter(messageCracker);
 	}
 
 	@Bean
@@ -49,6 +50,11 @@ public class SimpleServerSpring3 {
 
 		return new ThreadedSocketAcceptor(serverApplication, serverMessageStoreFactory, serverSessionSettings,
 				serverLogFactory, serverMessageFactory);
+	}
+
+	@Bean
+	public MessageCracker messageCracker(InstrumentsFromProperties instrumentsFromProperties) {
+		return new ApplicationMessageCracker(instrumentsFromProperties);
 	}
 
 }

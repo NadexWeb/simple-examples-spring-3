@@ -15,15 +15,23 @@
  */
 package com.nadex.quickfixj.spring.boot.starter.examples.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import quickfix.Application;
 import quickfix.Message;
 import quickfix.SessionID;
+import quickfix.fix50sp2.MessageCracker;
+import quickfix.UnsupportedMessageType;
+import quickfix.FieldNotFound;
+import quickfix.IncorrectTagValue;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ServerApplicationAdapter implements Application {
 
-	private static final Logger log = LoggerFactory.getLogger(ServerApplicationAdapter.class);
+	private final MessageCracker messageCracker;
+
+	public ServerApplicationAdapter(MessageCracker messageCracker){
+		this.messageCracker = messageCracker;
+	}
 
 	@Override
 	public void fromAdmin(Message message, SessionID sessionId) {
@@ -33,6 +41,11 @@ public class ServerApplicationAdapter implements Application {
 	@Override
 	public void fromApp(Message message, SessionID sessionId) {
 		log.info("fromApp: Message={}, SessionId={}", message, sessionId);
+		try {
+			this.messageCracker.crack(message, sessionId);
+		} catch (UnsupportedMessageType | FieldNotFound | IncorrectTagValue e) {
+			log.error(e.getMessage(), e);
+		}
 	}
 
 	@Override

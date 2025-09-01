@@ -14,11 +14,13 @@ quickfixj:
       UseDataDictionary=Y
       TransportDataDictionary=FIXT11.xml
       AppDataDictionary.FIX.5.0SP2=FIX50SP2.modified.xml
+      
       ResetOnLogon=Y
       ResetOnLogout=Y
       ResetOnDisconnect=Y
       ValidateUnorderedGroupFields=N
       ValidateUserDefinedFields=N
+      ValidateFieldsOutOfOrder=N
       CheckLatency=N
       HeartBtInt=30
       PersistMessages=N
@@ -27,15 +29,13 @@ quickfixj:
       
       
       [session]
-      BeginString=FIXT.1.1
-      DefaultApplVerID=FIX.5.0
       SocketAcceptPort=9881
-      SenderCompID=EXEC
-      TargetCompID=BANZAI
+      SenderCompID=SERVER
+      TargetCompID=CLIENT
       ConnectionType=acceptor
       TimeZone=Europe/London
-      StartTime=17:55:00
-      EndTime=17:50:00
+      StartTime=24:00:00
+      EndTime=23:55:00
 server:
   port: 8080
 
@@ -57,4 +57,47 @@ management:
     web:
       exposure:
         include: quickfixjserver
+
+app:
+  instruments:
+    -
+      symbol: A.TEST.ETHER.Jan.1
+      underlyingSymbol: ETH
+      product: 112
+      period: D
+      securitySubType: BINARY_OPTION
+      minPrice: 70.00
+      maxPrice: 120.00
+      minPriceIncrement: 0.25
+      currency: "USD"
+    -
+      symbol: A.TEST.ETHER.Feb.1
+      underlyingSymbol: ETH
+      product: 112
+      period: D
+      securitySubType: BINARY_OPTION
+      minPrice: 70.00
+      maxPrice: 120.00
+      minPriceIncrement: 0.25
+      currency: "USD"
+    -
+      symbol: A.TEST.BITCOIN.Jan.1
+      underlyingSymbol: BTC
+      product: 112
+      period: D
+      securitySubType: BINARY_OPTION
+      minPrice: 600.00
+      maxPrice: 1800.00
+      minPriceIncrement: 0.1
+      currency: "USD"
+    -
+      symbol: A.TEST.BITCOIN.Feb.1
+      underlyingSymbol: BTC
+      product: 112
+      period: D
+      securitySubType: BINARY_OPTION
+      minPrice: 600.00
+      maxPrice: 1800.00
+      minPriceIncrement: 0.1
+      currency: "USD"
 

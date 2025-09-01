@@ -62,6 +62,7 @@ public class ClientApplicationAdapter implements Application {
 	public void onLogon(SessionID sessionId) {
 		log.info("onLogon: SessionId={}", sessionId);
 		try {
+			// Request Security List
 			Session.sendToTarget(SecurityListRequestFactory.securityListRequest(), sessionId);
 		} catch (SessionNotFound e) {
 			String message = String.format("SessionNotFound exception for Session that just logged on: %s", sessionId);

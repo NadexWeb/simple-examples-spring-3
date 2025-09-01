@@ -54,7 +54,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.nadex.fce</groupId>
-				<artifactId>quickfixj-messages-all</artifactId>
+				<artifactId>quickfixj-messages-fix50sp2</artifactId>
 				<version>${cdna-qfj.version}</version>
 			</dependency>
 			<dependency>

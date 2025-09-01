@@ -73,31 +73,6 @@ public class ApplicationMessageCracker extends MessageCracker {
         }
     }
 
-    /**
-     * Returns the underlying symbols
-     *
-     * @param noRelatedSymGroup the related symbol group to process
-     * @return the matched underlying symbols
-     * @throws FieldNotFound Field Not Found
-     */
-    private static Set<String> getUnderlyingSymbols(SecurityList.NoRelatedSym noRelatedSymGroup) throws
-            FieldNotFound {
-        Set<String> underlyingSymbols = new HashSet<>();
-        NoUnderlyings noUnderlyings = noRelatedSymGroup.getNoUnderlyings();
-        int underlyingIterations = noUnderlyings.getValue() + 1;
-        SecurityList.NoRelatedSym.NoUnderlyings noUnderlyingsGroup = new SecurityList.NoRelatedSym.NoUnderlyings();
-        for (int i = 1; i < underlyingIterations; i++) {
-            noRelatedSymGroup.getGroup(i, noUnderlyingsGroup);
-            if (noUnderlyingsGroup.isSetUnderlyingSymbol()) {
-                String underlyingSymbol = noUnderlyingsGroup.getUnderlyingSymbol().getValue();
-                if (underlyingSymbols.contains(underlyingSymbol)) {
-                    underlyingSymbols.add(underlyingSymbol);
-                }
-            }
-        }
-        return underlyingSymbols;
-    }
-
     @Override
     public void onMessage(SecurityList securityList, SessionID sessionID)
             throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
@@ -133,7 +108,7 @@ public class ApplicationMessageCracker extends MessageCracker {
         int tradingSessionStatusValue = tradingSessionStatus.getTradSesStatus().getValue();
         log.info("received TradingSessionStatus: {}", tradingSessionStatusValue);
         if (TradSesStatus.OPEN != tradingSessionStatusValue) {
-            log.info("Session Status {} is not OPEN, exiting. TradingSessionStatus: {}", tradingSessionStatusValue);
+            log.info("Session Status {} is not OPEN, TradingSessionStatus: {}", tradingSessionStatusValue);
         }
     }
 
@@ -145,6 +120,13 @@ public class ApplicationMessageCracker extends MessageCracker {
         log.debug("Received Security Trading Status, Symbol:{} Security Trading Status:{}", symbol, securityTradingStatus);
     }
 
+    /**
+     * Processing the received SecurityList, retaining Instruments that pass the configured filters
+     * @param securityList
+     * @param noRelatedSym
+     * @return List of Instruments
+     * @throws FieldNotFound
+     */
     private List<Instrument> processSecurityList(SecurityList securityList, int noRelatedSym) throws FieldNotFound {
         List<Instrument> instruments = new ArrayList<>();
 		SecurityList.NoRelatedSym noRelatedSymGroup = new SecurityList.NoRelatedSym();
@@ -158,6 +140,12 @@ public class ApplicationMessageCracker extends MessageCracker {
         return instruments;
     }
 
+    /**
+     * Creates an Instrument based on that received in SecurityList if the filters are passed
+     * @param noRelatedSymGroup
+     * @return Instrument
+     * @throws FieldNotFound
+     */
 	private Optional<Instrument> createInstrumentIfFiltersPassed(SecurityList.NoRelatedSym noRelatedSymGroup) throws FieldNotFound {
 		String symbol = noRelatedSymGroup.getSymbol().getValue();
 		final String product = Integer.toString(noRelatedSymGroup.getProduct().getValue());

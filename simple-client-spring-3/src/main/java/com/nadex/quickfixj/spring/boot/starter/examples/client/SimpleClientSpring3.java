@@ -31,7 +31,6 @@ import com.nadex.quickfixj.spring.boot.starter.examples.client.filter.FilterProp
 @Slf4j
 @EnableQuickFixJClient
 @SpringBootApplication
-@EnableConfigurationProperties({FilterProperties.class})
 public class SimpleClientSpring3 {
 
 	public static void main(String[] args) {
@@ -48,15 +47,4 @@ public class SimpleClientSpring3 {
 		return new ApplicationMessageCracker(filterProperties);
 	}
 
-//	@Bean
-//	public Initiator clientInitiator(
-//			Application clientApplication,
-//			MessageStoreFactory clientMessageStoreFactory,
-//			SessionSettings clientSessionSettings,
-//			LogFactory clientLogFactory,
-//			MessageFactory clientMessageFactory) throws ConfigError {
-//
-//		return new ThreadedSocketInitiator(clientApplication, clientMessageStoreFactory, clientSessionSettings,
-//				clientLogFactory, clientMessageFactory);
-//	}
 }
