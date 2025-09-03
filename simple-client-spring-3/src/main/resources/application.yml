@@ -30,12 +30,18 @@ quickfixj:
       ReconnectInterval=5
       
       [session]
+      #SenderCompID=CLIENT
       SenderCompID=CLIENT
       TargetCompID=SERVER
-      SocketConnectHost=localhost      
+      # TargetCompID=NDXMD
+      
+      SocketConnectHost=localhost
+      #SocketConnectHost=bruatfxpb01.nadex.co
       SocketConnectPort=9881
+      #SocketConnectPort=7113
       LogonTag=553=${app.session.username}
-      LogonTag1=554=${password}
+      #LogonTag1=554=${password}
+      LogonTag1=554=${app.session.password}
       TimeZone=Europe/London
       StartTime=24:00:00
       EndTime=23:55:00
@@ -45,8 +51,10 @@ server:
 
 app:
   session:
-    username: CRYPTO
-    password: ${PASSWORD}
+    # username: BMARTINUAT
+    username: a-member
+    #password: ${PASSWORD}
+    password: BMARTINUAT
   filter:
     # filters are additive
     # instruments not matching all the specified filter criteria are omitted from the test

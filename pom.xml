@@ -138,6 +138,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>4.0.0-M2</version>
 				<executions>
 					<execution>
 						<goals>
@@ -146,6 +147,7 @@
 					</execution>
 				</executions>
 			</plugin>
+<!--
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -157,6 +159,7 @@
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
+-->
 			<plugin>
 				<!-- run "echo" to generate
 					diagrams in target, graphviz must be installed -->
@@ -202,18 +205,6 @@
 						<goals>deploy</goals>
 					</configuration>
 				</plugin>
-				<plugin>
-					<!-- mvn com.github.jeluard:plantuml-maven-plugin:generate -->
-					<groupId>com.github.jeluard</groupId>
-					<artifactId>plantuml-maven-plugin</artifactId>
-					<version>${plantuml-maven-plugin.version}</version>
-					<dependencies>
-						<dependency>
-							<groupId>net.sourceforge.plantuml</groupId>
-							<artifactId>plantuml</artifactId>
-						</dependency>
-					</dependencies>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -234,6 +225,7 @@
 			<id>release</id>
 			<build>
 				<plugins>
+<!--
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
@@ -248,6 +240,7 @@
 							</execution>
 						</executions>
 					</plugin>
+-->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
@@ -264,7 +257,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.4.1</version>
+						<version>3.11.3</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
