@@ -15,6 +15,7 @@
  */
 package com.nadex.quickfixj.spring.boot.starter.examples.client;
 
+import com.nadex.quickfixj.spring.boot.starter.examples.client.filter.FilterProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import quickfix.Application;
@@ -32,9 +33,11 @@ public class ClientApplicationAdapter implements Application {
 	private static final Logger log = LoggerFactory.getLogger(ClientApplicationAdapter.class);
 
 	private final MessageCracker messageCracker;
+	private final FilterProperties filterProperties;
 
-	public ClientApplicationAdapter(MessageCracker messageCracker) {
+	public ClientApplicationAdapter(MessageCracker messageCracker, FilterProperties filterProperties) {
 		this.messageCracker = messageCracker;
+		this.filterProperties = filterProperties;
 	}
 
 	@Override
@@ -44,8 +47,7 @@ public class ClientApplicationAdapter implements Application {
 
 	@Override
 	public void fromApp(Message message, SessionID sessionId) {
-		log.info("fromApp: Message={}, SessionId={}", message, sessionId);
-
+		log.debug("fromApp: Message={}, SessionId={}", message, sessionId);
 		try {
 			messageCracker.crack(message, sessionId);
 		} catch (UnsupportedMessageType | FieldNotFound | IncorrectTagValue e) {
@@ -63,7 +65,7 @@ public class ClientApplicationAdapter implements Application {
 		log.info("onLogon: SessionId={}", sessionId);
 		try {
 			// Request Security List
-			Session.sendToTarget(SecurityListRequestFactory.securityListRequest(), sessionId);
+			Session.sendToTarget(SecurityListRequestFactory.securityListRequest(this.filterProperties), sessionId);
 		} catch (SessionNotFound e) {
 			String message = String.format("SessionNotFound exception for Session that just logged on: %s", sessionId);
 			log.error(message);

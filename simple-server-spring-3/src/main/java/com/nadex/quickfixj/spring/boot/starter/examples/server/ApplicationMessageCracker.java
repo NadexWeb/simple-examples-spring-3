@@ -24,6 +24,7 @@ public class ApplicationMessageCracker extends MessageCracker {
 
     public ApplicationMessageCracker(InstrumentsFromProperties instrumentsFromProperties) {
         this.instrumentsFromProperties = instrumentsFromProperties;
+        log.debug("instruments size {}", instrumentsFromProperties.getInstruments().size());
     }
 
     public void onMessage(SecurityListRequest securityListRequest, SessionID sessionID) throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {

@@ -38,8 +38,8 @@ public class SimpleClientSpring3 {
 	}
 
 	@Bean
-	public Application clientApplication(MessageCracker messageCracker) {
-		return new ClientApplicationAdapter(messageCracker);
+	public Application clientApplication(MessageCracker messageCracker, FilterProperties filterProperties) {
+		return new ClientApplicationAdapter(messageCracker, filterProperties);
 	}
 
 	@Bean

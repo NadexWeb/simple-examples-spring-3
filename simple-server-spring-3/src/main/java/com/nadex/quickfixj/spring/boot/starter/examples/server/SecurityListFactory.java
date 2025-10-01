@@ -1,6 +1,7 @@
 package com.nadex.quickfixj.spring.boot.starter.examples.server;
 
 import com.nadex.quickfixj.spring.boot.starter.examples.server.domain.Instrument;
+import lombok.extern.slf4j.Slf4j;
 import quickfix.fix50sp2.SecurityList;
 import quickfix.field.SecurityReqID;
 import quickfix.field.SecurityRequestResult;
@@ -17,11 +18,13 @@ import quickfix.field.InstrAttribValue;
 
 import java.util.List;
 
+@Slf4j
 public class SecurityListFactory {
 
     public static final int INSTR_ATTRIB_TYPE_PERIOD_CODE = 511;
 
     public static SecurityList securityList(List<Instrument> instruments, SecurityReqID securityReqID) {
+        log.debug("instruments size {}", instruments.size());
         SecurityList securityList = new SecurityList();
         securityList.set(securityReqID);
         securityList.set(new SecurityRequestResult(SecurityRequestResult.VALID_REQUEST));
@@ -30,6 +33,7 @@ public class SecurityListFactory {
     }
 
     private static void addInstrument(Instrument instrument, SecurityList securityList) {
+        log.debug("adding {}", instrument.getSymbol());
         SecurityList.NoRelatedSym noRelatedSymGroup = new SecurityList.NoRelatedSym();
         noRelatedSymGroup.set(new Symbol(instrument.getSymbol()));
         noRelatedSymGroup.set(new Product(instrument.getProduct()));

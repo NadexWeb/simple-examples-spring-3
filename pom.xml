@@ -39,7 +39,8 @@
 		<cdna-qfj.version>3.6.0-SNAPSHOT</cdna-qfj.version>
 		<quickfixj-spring-boot.version>2.17.1</quickfixj-spring-boot.version>
 		<plantuml-maven-plugin.version>1.2</plantuml-maven-plugin.version>
-		<plantuml.version>1.2023.6</plantuml.version>
+		<plantuml.version>7954</plantuml.version>
+		<plantuml-mvn-plugin.version>0.2.14</plantuml-mvn-plugin.version>
 	</properties>
 
 	<dependencyManagement>
@@ -163,8 +164,9 @@
 			<plugin>
 				<!-- run "echo" to generate
 					diagrams in target, graphviz must be installed -->
-				<groupId>com.github.jeluard</groupId>
+				<groupId>com.github.davidmoten</groupId>
 				<artifactId>plantuml-maven-plugin</artifactId>
+				<version>${plantuml-mvn-plugin.version}</version>
 				<configuration>
 					<sourceFiles>
 						<directory>${project.basedir}</directory>
@@ -257,7 +259,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.11.3</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
