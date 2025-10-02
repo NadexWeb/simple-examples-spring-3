@@ -59,7 +59,7 @@ app:
     password: ????
   filter:
     # filters are additive
-    # instruments not matching all the specified filter criteria are omitted from the test
+    # instruments not matching all the specified filter criteria are omitted
     # filter criteria may be left blank
     underlyingSymbols:
     products: # In this version of the application only the first product specified will be evaluated
