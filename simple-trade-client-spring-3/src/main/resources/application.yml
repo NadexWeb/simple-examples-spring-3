@@ -1,0 +1,77 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+quickfixj:
+  client:
+    jmx-enabled: true
+    log-factory: slf4j
+    message-store-factory: noop
+    configString: |
+      [default]
+      BeginString=FIXT.1.1
+      DefaultApplVerID=FIX.5.0SP2
+      UseDataDictionary=Y
+      TransportDataDictionary=FIXT11.xml
+      AppDataDictionary.FIX.5.0SP2=FIX50SP2.modified.xml
+      
+      SocketUseSSL=N
+
+      ResetOnLogon=Y
+      ResetOnLogout=Y
+      ResetOnDisconnect=Y
+      ValidateUnorderedGroupFields=N
+      ValidateUserDefinedFields=N
+      ValidateFieldsOutOfOrder=N
+      AllowUnknownMsgFields=Y
+      CheckLatency=N
+      HeartBtInt=30
+      PersistMessages=N
+      SLF4JLogEventCategory=quickfix.events
+      SLF4JLogIncomingMessageCategory=${targetCompID}.${senderCompID}.incoming
+      SLF4JLogOutgoingMessageCategory=${targetCompID}.${senderCompID}.outgoing
+      SLF4JLogPrependSessionID=N
+      SLF4JLogHeartbeats=Y
+      
+      ConnectionType=initiator
+      ReconnectInterval=5
+      
+      [session]
+      SenderCompID=???
+      TargetCompID=???
+
+      #SocketConnectHost=localhost
+      SocketConnectHost=????
+      SocketConnectPort=????
+      
+      LogonTag=553=${app.session.username}
+      LogonTag1=554=${app.session.password}
+      TimeZone=Europe/London
+      StartTime=24:00:00
+      EndTime=23:55:00
+
+server:
+  port: 8080
+
+app:
+  session:
+    username: ???
+    password: ???
+logging:
+  group:
+    fix: quickfix.ThreadedSocketInitiator, quickfixj.msg.incoming, quickfixj.msg.outgoing
+    nadex: com.nadex
+    allune: com.allune
+  level:
+    fix: INFO
+    nadex: DEBUG
+    allune: INFO
+
+management:
+  endpoint:
+    quickfixjclient:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: quickfixjclient

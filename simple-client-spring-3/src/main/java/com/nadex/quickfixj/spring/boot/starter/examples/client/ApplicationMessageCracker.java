@@ -17,7 +17,6 @@ package com.nadex.quickfixj.spring.boot.starter.examples.client;
 
 import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.InstrumentFactory;
 import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.Instrument;
-import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.MarketDataRequestFactory;
 import com.nadex.quickfixj.spring.boot.starter.examples.client.filter.FilterProperties;
 import lombok.extern.slf4j.Slf4j;
 import quickfix.FieldNotFound;
@@ -38,6 +37,10 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 
+/**
+ * ApplicationMessageCracker extends the QuickFIX/J MessageCracker to provide an implementation of callbacks
+ * for the messages of interest
+ */
 @Slf4j
 public class ApplicationMessageCracker extends MessageCracker {
 
@@ -117,7 +120,7 @@ public class ApplicationMessageCracker extends MessageCracker {
             throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
         String symbol = securityStatus.getSymbol().getValue();
         int securityTradingStatus = securityStatus.getSecurityTradingStatus().getValue();
-        log.debug("Received Security Trading Status, Symbol:{} Security Trading Status:{}", symbol, securityTradingStatus);
+        log.debug("Received SecurityStatus, Symbol:{} Security Trading Status:{}", symbol, securityTradingStatus);
     }
 
     @Override
@@ -127,9 +130,10 @@ public class ApplicationMessageCracker extends MessageCracker {
                 marketDataSnapshotFullRefresh.getSymbol().getValue(), marketDataSnapshotFullRefresh.getNoMDEntries().getValue());
     }
 
+    @Override
     public void onMessage(MarketDataIncrementalRefresh marketDataIncrementalRefresh, SessionID sessionID)
             throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
-        log.info("Received Market Data Snapshot Full Refresh, Symbol:{}, number of MDEntries {}",
+        log.info("Received Market Data Snapshot Incremental Refresh, Symbol:{}, number of MDEntries {}",
                 marketDataIncrementalRefresh.getSymbol().getValue(), marketDataIncrementalRefresh.getNoMDEntries().getValue());
     }
 

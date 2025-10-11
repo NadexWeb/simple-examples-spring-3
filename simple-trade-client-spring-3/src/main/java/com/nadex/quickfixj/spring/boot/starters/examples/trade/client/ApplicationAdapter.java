@@ -13,32 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.nadex.quickfixj.spring.boot.starter.examples.client;
+package com.nadex.quickfixj.spring.boot.starters.examples.trade.client;
 
-import com.nadex.quickfixj.spring.boot.starter.examples.client.filter.FilterProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import quickfix.*;
 import quickfix.Application;
-import quickfix.FieldNotFound;
-import quickfix.IncorrectTagValue;
-import quickfix.Message;
-import quickfix.Session;
-import quickfix.SessionNotFound;
-import quickfix.SessionID;
-import quickfix.UnsupportedMessageType;
-import quickfix.fix50sp2.MessageCracker;
 
+@Slf4j
+@Component
+public class ApplicationAdapter implements Application {
 
-public class ClientApplicationAdapter implements Application {
+	private final ApplicationMessageCracker messageCracker;
+	private final NewOrderSingleController newOrderSingleController;
 
-	private static final Logger log = LoggerFactory.getLogger(ClientApplicationAdapter.class);
-
-	private final MessageCracker messageCracker;
-	private final FilterProperties filterProperties;
-
-	public ClientApplicationAdapter(MessageCracker messageCracker, FilterProperties filterProperties) {
+	public ApplicationAdapter(ApplicationMessageCracker messageCracker, NewOrderSingleController newOrderSingleController) {
 		this.messageCracker = messageCracker;
-		this.filterProperties = filterProperties;
+		this.newOrderSingleController = newOrderSingleController;
 	}
 
 	@Override
@@ -64,18 +55,14 @@ public class ClientApplicationAdapter implements Application {
 	@Override
 	public void onLogon(SessionID sessionId) {
 		log.info("onLogon: SessionId={}", sessionId);
-		try {
-			// Request Security List
-			Session.sendToTarget(SecurityListRequestFactory.securityListRequest(this.filterProperties), sessionId);
-		} catch (SessionNotFound e) {
-			String message = String.format("SessionNotFound exception for Session that just logged on: %s", sessionId);
-			log.error(message);
-		}
+		// basic way to get message cracker to directly publish received messages
+		newOrderSingleController.setSessionID(sessionId);
 	}
 
 	@Override
 	public void onLogout(SessionID sessionId) {
 		log.info("onLogout: SessionId={}", sessionId);
+		newOrderSingleController.setSessionID(null);
 	}
 
 	@Override
