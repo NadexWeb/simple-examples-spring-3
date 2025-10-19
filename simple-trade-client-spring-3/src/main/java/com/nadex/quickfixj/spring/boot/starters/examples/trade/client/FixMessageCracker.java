@@ -15,6 +15,9 @@
  */
 package com.nadex.quickfixj.spring.boot.starters.examples.trade.client;
 
+import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.fix.BusinessMessageRejectFactory;
+import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.fix.ExecutionReportFactory;
+import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.fix.OrderCancelRejectFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.stereotype.Component;
@@ -30,12 +33,12 @@ import quickfix.fix50sp2.MessageCracker;
  */
 @Slf4j
 @Component
-public class ApplicationMessageCracker extends MessageCracker {
+public class FixMessageCracker extends MessageCracker {
 
     public static final String PATH = "/topic/messages";
     private final MessageSendingOperations<String> messageSendingOperations;
 
-    public ApplicationMessageCracker(MessageSendingOperations<String> messageSendingOperations) {
+    public FixMessageCracker(MessageSendingOperations<String> messageSendingOperations) {
         this.messageSendingOperations = messageSendingOperations;
     }
 
@@ -43,14 +46,21 @@ public class ApplicationMessageCracker extends MessageCracker {
     public void onMessage(quickfix.fix50sp2.ExecutionReport executionReport, SessionID sessionID)
             throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
         log.info("ExecutionReport received: {}", executionReport);
-        this.messageSendingOperations.convertAndSend(PATH, ExecutionReportFactory.executionReportFromFixExecutionReport(executionReport));
+        this.messageSendingOperations.convertAndSend(PATH, ExecutionReportFactory.fromFix(executionReport));
+    }
+
+    @Override
+    public void onMessage(quickfix.fix50sp2.OrderCancelReject orderCancelReject, SessionID sessionID)
+            throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
+        log.info("OrderCancelReject received: {}", orderCancelReject);
+        this.messageSendingOperations.convertAndSend(PATH, OrderCancelRejectFactory.fromFix(orderCancelReject));
     }
 
     @Override
     public void onMessage(quickfix.fix50sp2.BusinessMessageReject businessMessageReject, SessionID sessionID)
             throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
         log.info("BusinessMessageReject received: {}", businessMessageReject);
-        this.messageSendingOperations.convertAndSend(PATH, BusinessMessageRejectFactory.businessMessageRejectFromFix(businessMessageReject));
+        this.messageSendingOperations.convertAndSend(PATH, BusinessMessageRejectFactory.fromFix(businessMessageReject));
     }
 
 }

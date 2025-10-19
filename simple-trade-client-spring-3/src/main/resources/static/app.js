@@ -42,16 +42,55 @@ function disconnect() {
     console.log("Disconnected");
 }
 
+function sendOrderCancel() {
+    stompClient.publish({
+        destination: "/app/order-cancel",
+        body: JSON.stringify(
+            {
+                'msgType': "F",
+                'origClOrdID': $("#orderCancelOrigClOrdID").val(),
+                'clientID': $("#orderCancelClientID").val(),
+                'symbol': $("#orderCancelSymbol").val(),
+                'side': $("#orderCancelSide-select").val(),
+                'qty': $("#orderCancelQty").val(),
+            })
+    });
+}
+
+function sendOrderCancelReplaceRequest() {
+    // In this example ClOrdId and TransactTime are populated by the consumer of this message
+    // OrigClOrdID must however be supplied
+    stompClient.publish({
+        destination: "/app/order-cancel-replace-request",
+        body: JSON.stringify(
+            {
+                'msgType': "G",
+                'origClOrdID': $("#orderCancelReplaceRequestOrigClOrdID").val(),
+                'clientID': $("#orderCancelReplaceRequestClientID").val(),
+                'symbol': $("#orderCancelReplaceRequestSymbol").val(),
+                'side': $("#orderCancelReplaceRequestSide-select").val(),
+                'qty': $("#orderCancelReplaceRequestQty").val(),
+                'ordType': $("#orderCancelReplaceRequestOrd-type-select").val(),
+                'px': $("#orderCancelReplaceRequestPx").val(), // price is required if a limit order
+                'tif': $("#orderCancelReplaceRequestTif-select").val()
+            })
+    });
+}
+
+
 function sendNewOrderSingle() {
+    // In this example ClOrdId and TransactTime are populated by the consumer of this message
     stompClient.publish({
         destination: "/app/new-order-single",
-        body: JSON.stringify({'symbol': $("#symbol").val(),
-            'qty': $("#qty").val(),
-            'px': $("#px").val(),
-            'clientID': $("#clientID").val(),
-            'side': $("#side-select").val(),
-            'ordType': $("#ord-type-select").val(),
-            'tif': $("#tif-select").val()})
+        body: JSON.stringify(
+            {'msgType': "D",
+                'symbol': $("#symbol").val(),
+                'qty': $("#qty").val(),
+                'px': $("#px").val(),
+                'clientID': $("#clientID").val(),
+                'side': $("#side-select").val(),
+                'ordType': $("#ord-type-select").val(),
+                'tif': $("#tif-select").val()})
     });
 }
 
@@ -63,6 +102,8 @@ $(function () {
     $("form").on('submit', (e) => e.preventDefault());
     $( "#connect" ).click(() => connect());
     $( "#disconnect" ).click(() => disconnect());
-    $( "#send" ).click(() => sendNewOrderSingle());
+    $( "#sendNewOrderSingle" ).click(() => sendNewOrderSingle());
+    $( "#sendOrderCancel" ).click(() => sendOrderCancel());
+    $( "#sendOrderCancelReplaceRequest" ).click(() => sendOrderCancelReplaceRequest());
 });
 

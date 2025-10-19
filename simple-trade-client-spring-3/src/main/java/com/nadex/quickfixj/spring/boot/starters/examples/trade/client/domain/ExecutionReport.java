@@ -3,7 +3,7 @@ package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain;
 import lombok.Data;
 
 @Data
-public class ExecutionReport {
+public class ExecutionReport extends Message {
     public String symbol;
     public String orderID;
     public String clientOrderID;

@@ -1,36 +1,20 @@
-package com.nadex.quickfixj.spring.boot.starters.examples.trade.client;
+package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.fix;
 
 import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.ExecutionReport;
-import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.NewOrderSingle;
 import quickfix.FieldNotFound;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.UUID;
+import quickfix.field.MsgType;
 
 public class ExecutionReportFactory {
-    public static ExecutionReport executionReportFromNewOrderSingle(NewOrderSingle newOrderSingle) {
-        ExecutionReport executionReport = new ExecutionReport();
-        executionReport.setSymbol(newOrderSingle.getSymbol());
-        executionReport.setOrderID(UUID.randomUUID().toString());
-        executionReport.setExecID(UUID.randomUUID().toString());
-        executionReport.setSide(newOrderSingle.getSide());
-        executionReport.setAvgPx(newOrderSingle.getPx());
-        executionReport.setPrice(newOrderSingle.getPx());
-        executionReport.setClientOrderID(UUID.randomUUID().toString());
-        executionReport.setCumQty(newOrderSingle.getQty());
-        executionReport.setOrderQty(newOrderSingle.getQty());
-        executionReport.setLastQty(newOrderSingle.getQty());
-        executionReport.setLeavesQty("0.0");
-        executionReport.setTransactTime(Instant.now().toString() );
-        executionReport.setOrdStatus("2");
-        executionReport.setTradeDate(LocalDate.now().toString());
-        return executionReport;
-    }
-
+    /**
+     * Returns a Domain value object from the FIX Execution Report
+     * @param executionReport FIX Execution Report
+     * @return Domain Execution Report
+     * @throws FieldNotFound QuickFIX/J Exception
+     */
     public static com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.ExecutionReport
-        executionReportFromFixExecutionReport(quickfix.fix50sp2.ExecutionReport executionReport) throws FieldNotFound {
+    fromFix(quickfix.fix50sp2.ExecutionReport executionReport) throws FieldNotFound {
         com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.ExecutionReport domainExecutionReport = new ExecutionReport();
+        domainExecutionReport.setMsgType(executionReport.getHeader().getString(MsgType.FIELD));
         if (executionReport.isSetSymbol()) {
             domainExecutionReport.setSymbol(executionReport.getSymbol().getValue());
         }

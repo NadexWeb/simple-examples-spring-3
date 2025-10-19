@@ -1,16 +1,18 @@
-package com.nadex.quickfixj.spring.boot.starters.examples.trade.client;
+package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.to.fix;
 
-import org.springframework.stereotype.Component;
 import quickfix.field.*;
 import quickfix.fix50sp2.NewOrderSingle;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.UUID;
 
 public class NewOrderSingleFactory {
-    public static NewOrderSingle fromDomainNewOrderSingle(com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.NewOrderSingle domainNewOrderSingle) {
+    /**
+     * Constructs a FIX New Order Single message the received Domain object
+     * @param domainNewOrderSingle Domain New Order Single
+     * @return FIX New Order Single
+     */
+    public static NewOrderSingle fromDomain(com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.NewOrderSingle domainNewOrderSingle) {
         NewOrderSingle fixNewOrderSingle =  new NewOrderSingle();
 
         fixNewOrderSingle.set(new Symbol(domainNewOrderSingle.getSymbol()));

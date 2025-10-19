@@ -3,7 +3,7 @@ package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain;
 import lombok.Data;
 
 @Data
-public class BusinessMessageReject {
+public class BusinessMessageReject extends Message {
     String refSeqNum;
     String refMsgType;
     String businessRejectRefID;
