@@ -1,147 +1,284 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Order Entry Example</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link href="/main.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link href="./main.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="/app.js"></script>
 </head>
+
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+    <noscript>
+        <h2 style="color: #ff0000">Seems your browser doesn't support
+            Javascript! Websocket relies on Javascript being
+            enabled. Please enable
+            Javascript and reload this page!</h2>
+    </noscript>
+    <div id="main-content" class="grid grid-cols-12 space-x-8">
+        <div class="col-span-8">
+            <form class="">
+                <div class="">
+                    <p>WebSocket connection:</p>
+                    <button id="connect" class="btn btn-default"
+                        type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-cancel" type="submit"
+                        disabled="disabled">Disconnect
                     </button>
                 </div>
             </form>
-        </div>
-        <div class="col-md-6">
-            <h1>New Order Single</h1>
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="symbol">Symbol</label>
-                    <input type="text" id="symbol" class="form-control" placeholder="Symbol here...">
-                    </br>
-                    <label for="qty">Order Quantity</label>
-                    <input type="text" id="qty" class="form-control" placeholder="Integer Quantity here">
-                    </br>
-                    <label for="px">Price</label>
-                    <input type="text" id="px" class="form-control" placeholder="Decimal Quantity here">
-                    </br>
-                    <label for="clientID">Client ID</label>
-                    <input type="text" id="clientID" class="form-control" placeholder="Client ID here..">
-                    </br>
-                    <label for="side-select">Side</label>
-                    <select name="side" id="side-select">
-                        <option value="BUY">Buy</option>
-                        <option value="SELL">Sell</option>
-                    </select>
-                    </br>
-                    <label for="ord-type-select">Order Type</label>
-                    <select name="ordType" id="ord-type-select">
-                        <option value="LIMIT">Limit</option>
-                        <option value="STOP_LIMIT">Stop Limit</option>
-                    </select>
-                    </br>
-                    <label for="tif-select">Time In Force</label>
-                    <select name="tif" id="tif-select">
-                        <option value="IOC">Immediate or Cancel</option>
-                        <option value="FOK">Fill or Kill</option>
-                        <option value="GTC">Good 'till Cancel</option>
-                    </select>
-                </div>
-                <button id="sendNewOrderSingle" class="btn btn-default" type="submit">Send</button>
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="messages-table" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Messages</th>
-                </tr>
-                </thead>
-                <tbody id="messages">
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <h1>Order Cancel</h1>
-        <form class="form-inline">
-            <div class="form-group">
-                <label for="orderCancelSymbol">Symbol</label>
-                <input type="text" id="orderCancelSymbol" class="form-control" placeholder="Symbol here...">
-                </br>
-                <label for="orderCancelOrigClOrdID">Original Client Order ID</label>
-                <input type="text" id="orderCancelOrigClOrdID" class="form-control" placeholder="Original Client Order ID here...">
-                </br>
-                <label for="orderCancelQty">Order Quantity</label>
-                <input type="text" id="orderCancelQty" class="form-control" placeholder="Integer Quantity here">
-                </br>
-                <label for="orderCancelClientID">Client ID</label>
-                <input type="text" id="orderCancelClientID" class="form-control" placeholder="Client ID here..">
-                </br>
-                <label for="orderCancelSide-select">Side</label>
-                <select name="side" id="orderCancelSide-select">
-                    <option value="BUY">Buy</option>
-                    <option value="SELL">Sell</option>
-                </select>
+            <div
+                class='mt-8 h-[300px] border border-gray-300 p-2 overflow-hidden'>
+                <h2 class='text-lg font-semibold'>Messages</h2>
+                <ul id='messages' class='overflow-y-auto h-full '>
+
+                </ul>
             </div>
-            <button id="sendOrderCancel" class="btn btn-default" type="submit">Send</button>
-        </form>
-    </div>
-    <div class="col-md-6">
-        <h1>Order Cancel Replace Request</h1>
-        <form class="form-inline">
-            <div class="form-group">
-                <label for="orderCancelReplaceRequestSymbol">Symbol</label>
-                <input type="text" id="orderCancelReplaceRequestSymbol" class="form-control" placeholder="Symbol here...">
-                </br>
-                <label for="orderCancelReplaceRequestOrigClOrdID">Original Client Order ID</label>
-                <input type="text" id="orderCancelReplaceRequestOrigClOrdID" class="form-control" placeholder="Original Client Order ID here...">
-                </br>
-                <label for="orderCancelReplaceRequestQty">Order Quantity</label>
-                <input type="text" id="orderCancelReplaceRequestQty" class="form-control" placeholder="Integer Quantity here">
-                </br>
-                <label for="orderCancelReplaceRequestPx">Price</label>
-                <input type="text" id="orderCancelReplaceRequestPx" class="form-control" placeholder="Decimal Quantity here">
-                </br>
-                <label for="orderCancelReplaceRequestClientID">Client ID</label>
-                <input type="text" id="orderCancelReplaceRequestClientID" class="form-control" placeholder="Client ID here..">
-                </br>
-                <label for="orderCancelReplaceRequestSide-select">Side</label>
-                <select name="side" id="orderCancelReplaceRequestSide-select">
-                    <option value="BUY">Buy</option>
-                    <option value="SELL">Sell</option>
-                </select>
-                </br>
-                <label for="orderCancelReplaceRequestOrd-type-select">Order Type</label>
-                <select name="ordType" id="orderCancelReplaceRequestOrd-type-select">
-                    <option value="LIMIT">Limit</option>
-                    <option value="STOP_LIMIT">Stop Limit</option>
-                </select>
-                </br>
-                <label for="orderCancelReplaceRequestTif-select">Time In Force</label>
-                <select name="tif" id="orderCancelReplaceRequestTif-select">
-                    <option value="IOC">Immediate or Cancel</option>
-                    <option value="FOK">Fill or Kill</option>
-                    <option value="GTC">Good 'till Cancel</option>
-                </select>
+
+            <div
+                class='mt-8 h-[300px] border border-gray-300 p-2 overflow-hidden overflow-y-auto'>
+                <h2 class='text-lg font-semibold'>Working Orders</h2>
+                <table class="table table-auto">
+                    <thead>
+                        <tr>
+                            <th class='text-center p-2'>Symbol</th>
+                            <th class='text-center p-2'>Client Order ID</th>
+                            <th class='text-center p-2'>Qty</th>
+                            <th class='text-center p-2'>Price</th>
+                            <th class='text-center p-2'>Client ID</th>
+                            <th class='text-center p-2'>Side</th>
+                            <th class='text-center p-2'>Type</th>
+                            <th class='text-center p-2'>Time In Force</th>
+                            <th class=''></th>
+                            <th class=''></th>
+                        </tr>
+                    </thead>
+                    <tbody id="working-orders">
+                        <tr>
+                            <td class='p-2 text-center'>FX.OPT.123</td>
+                            <td>12345</td>
+                            <td>10</td>
+                            <td>55.11</td>
+                            <td>12345</td>
+                            <td>Buy</td>
+                            <td>Limit</td>
+                            <td>GTC</td>
+                        </tr>
+                        <tr>
+                            <td>FX.OPT.123</td>
+                            <td>12345</td>
+                            <td>10</td>
+                            <td>55.11</td>
+                            <td>12345</td>
+                            <td>Buy</td>
+                            <td>Limit</td>
+                            <td>GTC</td>
+                        </tr>
+                        <tr>
+                            <td>FX.OPT.123</td>
+                            <td>12345</td>
+                            <td>10</td>
+                            <td>55.11</td>
+                            <td>12345</td>
+                            <td>Buy</td>
+                            <td>Limit</td>
+                            <td>GTC</td>
+                        </tr>
+                        <tr>
+                            <td>FX.OPT.123</td>
+                            <td>12345</td>
+                            <td>10</td>
+                            <td>55.11</td>
+                            <td>12345</td>
+                            <td>Buy</td>
+                            <td>Limit</td>
+                            <td>GTC</td>
+                        </tr>
+                        <tr>
+                            <td>FX.OPT.123</td>
+                            <td>12345</td>
+                            <td>10</td>
+                            <td>55.11</td>
+                            <td>12345</td>
+                            <td>Buy</td>
+                            <td>Limit</td>
+                            <td>GTC</td>
+                        </tr>
+                        <tr>
+                            <td>FX.OPT.123</td>
+                            <td>12345</td>
+                            <td>10</td>
+                            <td>55.11</td>
+                            <td>12345</td>
+                            <td>Buy</td>
+                            <td>Limit</td>
+                            <td>GTC</td>
+                        </tr>
+                        <tr>
+                            <td>FX.OPT.123</td>
+                            <td>12345</td>
+                            <td>10</td>
+                            <td>55.11</td>
+                            <td>12345</td>
+                            <td>Buy</td>
+                            <td>Limit</td>
+                            <td>GTC</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <button id="sendOrderCancelReplaceRequest" class="btn btn-default" type="submit">Send</button>
-        </form>
+        </div>
+        <div class='col-span-4'>
+            <div class="border border-gray-300 p-2">
+                <h2 class='font-semibold text-lg'>New Order Single</h2>
+                <form class="">
+                    <div class="grid grid-cols-2">
+                        <label class='col-span-1' for="symbol">Symbol</label>
+                        <input type="text" id="symbol" class="col-span-1"
+                            placeholder="Symbol here...">
+                        <label for="qty">Order Quantity</label>
+                        <input type="text" id="qty" class="col-span-1"
+                            placeholder="Integer Quantity here">
+                        <label class='col-span-1' for="px">Price</label>
+                        <input type="text" id="px" class="col-span-1"
+                            placeholder="Decimal Quantity here">
+                        <label class='col-span-1' for="clientID">Client
+                            ID</label>
+                        <input type="text" id="clientID" class="col-span-1"
+                            placeholder="Client ID here..">
+                        <label class='col-span-1' for="side-select">Side</label>
+                        <select name="side" id="side-select">
+                            <option value="BUY">Buy</option>
+                            <option value="SELL">Sell</option>
+                        </select>
+                        <label class='col-span-1' for="ord-type-select">Order
+                            Type</label>
+                        <select name="ordType" id="ord-type-select">
+                            <option value="LIMIT">Limit</option>
+                            <option value="STOP_LIMIT">Stop Limit</option>
+                        </select>
+                        <label class='col-span-1' for="tif-select">Time In
+                            Force</label>
+                        <select name="tif" id="tif-select">
+                            <option value="IOC">Immediate or Cancel</option>
+                            <option value="FOK">Fill or Kill</option>
+                            <option value="GTC">Good 'till Cancel</option>
+                        </select>
+                    </div>
+                    <div class='flex flex-row mt-4'>
+
+                        <button id="sendNewOrderSingle"
+                            class="btn btn-default ml-auto"
+                            type="submit">Send</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- <div class="col-md-6">
+                <h1>Order Cancel</h1>
+                <form class="">
+                    <div class="">
+                        <label for="orderCancelSymbol">Symbol</label>
+                        <input type="text" id="orderCancelSymbol"
+                            class="form-control" placeholder="Symbol here...">
+                        </br>
+                        <label for="orderCancelOrigClOrdID">Original Client
+                            Order
+                            ID</label>
+                        <input type="text" id="orderCancelOrigClOrdID"
+                            class="form-control"
+                            placeholder="Original Client Order ID here...">
+                        </br>
+                        <label for="orderCancelQty">Order Quantity</label>
+                        <input type="text" id="orderCancelQty"
+                            class="form-control"
+                            placeholder="Integer Quantity here">
+                        </br>
+                        <label for="orderCancelClientID">Client ID</label>
+                        <input type="text" id="orderCancelClientID"
+                            class="form-control" placeholder="Client ID here..">
+                        </br>
+                        <label for="orderCancelSide-select">Side</label>
+                        <select name="side" id="orderCancelSide-select">
+                            <option value="BUY">Buy</option>
+                            <option value="SELL">Sell</option>
+                        </select>
+                    </div>
+                    <button id="sendOrderCancel" class="btn btn-default"
+                        type="submit">Send</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <h1>Order Cancel Replace Request</h1>
+                <form class="">
+                    <div class="">
+                        <label
+                            for="orderCancelReplaceRequestSymbol">Symbol</label>
+                        <input type="text" id="orderCancelReplaceRequestSymbol"
+                            class="form-control" placeholder="Symbol here...">
+                        </br>
+                        <label
+                            for="orderCancelReplaceRequestOrigClOrdID">Original
+                            Client Order ID</label>
+                        <input type="text"
+                            id="orderCancelReplaceRequestOrigClOrdID"
+                            class="form-control"
+                            placeholder="Original Client Order ID here...">
+                        </br>
+                        <label for="orderCancelReplaceRequestQty">Order
+                            Quantity</label>
+                        <input type="text" id="orderCancelReplaceRequestQty"
+                            class="form-control"
+                            placeholder="Integer Quantity here">
+                        </br>
+                        <label for="orderCancelReplaceRequestPx">Price</label>
+                        <input type="text" id="orderCancelReplaceRequestPx"
+                            class="form-control"
+                            placeholder="Decimal Quantity here">
+                        </br>
+                        <label for="orderCancelReplaceRequestClientID">Client
+                            ID</label>
+                        <input type="text"
+                            id="orderCancelReplaceRequestClientID"
+                            class="form-control" placeholder="Client ID here..">
+                        </br>
+                        <label
+                            for="orderCancelReplaceRequestSide-select">Side</label>
+                        <select name="side"
+                            id="orderCancelReplaceRequestSide-select">
+                            <option value="BUY">Buy</option>
+                            <option value="SELL">Sell</option>
+                        </select>
+                        </br>
+                        <label
+                            for="orderCancelReplaceRequestOrd-type-select">Order
+                            Type</label>
+                        <select name="ordType"
+                            id="orderCancelReplaceRequestOrd-type-select">
+                            <option value="LIMIT">Limit</option>
+                            <option value="STOP_LIMIT">Stop Limit</option>
+                        </select>
+                        </br>
+                        <label for="orderCancelReplaceRequestTif-select">Time In
+                            Force</label>
+                        <select name="tif"
+                            id="orderCancelReplaceRequestTif-select">
+                            <option value="IOC">Immediate or Cancel</option>
+                            <option value="FOK">Fill or Kill</option>
+                            <option value="GTC">Good 'till Cancel</option>
+                        </select>
+                    </div>
+                    <button id="sendOrderCancelReplaceRequest"
+                        class="btn btn-default" type="submit">Send</button>
+                </form>
+            </div> -->
+        </div>
+
     </div>
-</div>
 </body>
+
 </html>

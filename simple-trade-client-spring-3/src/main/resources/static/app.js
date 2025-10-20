@@ -10,28 +10,7 @@ const stompClient = new StompJs.Client({
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/messages', (message) => {
-        const myMsg = JSON.parse(message.body)
-        if (myMsg.msgType === '8' && myMsg.execType !== 'I') {  // exec report and not result of order status request
-            if (myMsg.ordStatus === '0' ||
-                myMsg.ordStatus === '1') {
-                // these are working order states
-                // put in working orders with the important fields
-                // we would use for order cancel or order cancel replace request
-                // Symbol
-                // Original Client Order ID
-                // Order Quantity
-                // Price
-                // Client ID
-                // Side
-                // Order Type
-                // Time In Force
-            } else if (!['6', '8', 'A', 'B', 'D', 'E'].includes(myMsg.ordStatus)) {
-                // any other states, the order is no longer working and should be removed from working orders
-            }
-        }
-        showMessage(JSON.stringify(myMsg));
-    });
+    stompClient.subscribe('/topic/messages', handleMessage)
 };
 
 stompClient.onWebSocketError = (error) => {
@@ -42,6 +21,63 @@ stompClient.onStompError = (frame) => {
     console.error('Broker reported error: ' + frame.headers['message']);
     console.error('Additional details: ' + frame.body);
 };
+
+function handleMessage(message) {
+    const myMsg = JSON.parse(message.body)
+
+
+    if (myMsg.msgType === '8' && myMsg.execType !== 'I') {  // exec report and not result of order status request
+        if (myMsg.ordStatus === '0' || myMsg.ordStatus === '1') {
+            handleWorkingOrderAdd(myMsg);
+        // any other states, the order is no longer working and should be removed from working orders
+        } else if (!['6', '8', 'A', 'B', 'D', 'E'].includes(myMsg.ordStatus)) {
+            handleWorkingOrderRemove()
+        }
+    }
+    showMessage(JSON.stringify(myMsg));
+}
+
+function handleWorkingOrderRemove() {}
+
+// these are working order states
+// put in working orders with the important fields
+// we would use for order cancel or order cancel replace request
+// Symbol
+// Original Client Order ID
+// Order Quantity
+// Price
+// Client ID
+// Side
+// Order Type
+// Time In Force
+function handleWorkingOrderAdd(order) {
+    const rowHtml = buildHtmlRow(order)
+    $('#working-orders').prepend(rowHtml)
+}
+
+const workingOrderRowId = (id) => `wo-${id}`
+
+function buildHtmlRow(order) {
+    const {
+        msgType,
+        origClOrdID,
+        clientID,
+        symbol,
+        side,
+        qty,
+        ordType,
+        px,
+        tif,
+    } = order;
+    const fields = [symbol, msgType, origClOrdID, qty, px, clientID, side, ordType, tif ]
+    const cells = fields.map(buildHtmlCell)
+    const rowTemplate = `<tr id=${workingOrderRowId(origClOrdID)}>${cells}</tr>`
+    return rowTemplate
+}
+
+function buildHtmlCell({ id, value}) {
+    return `<td id=${id} class='p-2 text-center'>${value}</td>`
+}
 
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -119,8 +155,12 @@ function sendNewOrderSingle() {
     });
 }
 
+function removeMessage(orderId) {
+    $(workingOrderRowId(orderId)).remove();
+}
+
 function showMessage(message) {
-    $("#messages").append("<tr><td>" + message + "</td></tr>");
+    $("#messages").append("<li>" + message + "</li>");
 }
 
 $(function () {
