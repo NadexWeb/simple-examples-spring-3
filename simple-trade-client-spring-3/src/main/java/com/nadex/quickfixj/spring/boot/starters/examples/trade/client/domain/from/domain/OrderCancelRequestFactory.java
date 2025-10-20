@@ -4,6 +4,7 @@ import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.Ord
 import quickfix.field.*;
 import quickfix.fix50sp2.OrderCancelRequest;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class OrderCancelRequestFactory {
         partyIDGroup.set(new PartyRole(PartyRole.CLIENT_ID));
         orderCancelRequest.addGroup(partyIDGroup);
         orderCancelRequest.set(new Symbol(domainOrderCancel.getSymbol()));
-        orderCancelRequest.set(new OrderQty(Double.parseDouble(domainOrderCancel.getQty())));
+        orderCancelRequest.set(new OrderQty(new BigDecimal(domainOrderCancel.getQty())));
         // map the received message values
         switch (domainOrderCancel.getSide()) {
             case "BUY":

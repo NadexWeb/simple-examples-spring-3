@@ -3,6 +3,7 @@ package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.fr
 import quickfix.field.*;
 import quickfix.fix50sp2.NewOrderSingle;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -14,10 +15,9 @@ public class NewOrderSingleFactory {
      */
     public static NewOrderSingle fromDomain(com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.NewOrderSingle domainNewOrderSingle) {
         NewOrderSingle fixNewOrderSingle =  new NewOrderSingle();
-
         fixNewOrderSingle.set(new Symbol(domainNewOrderSingle.getSymbol()));
-        fixNewOrderSingle.set(new OrderQty(Double.parseDouble(domainNewOrderSingle.getQty())));
-        fixNewOrderSingle.set(new Price(Double.parseDouble(domainNewOrderSingle.getPx())));
+        fixNewOrderSingle.set(new OrderQty(new BigDecimal(domainNewOrderSingle.getQty())));
+        fixNewOrderSingle.set(new Price(new BigDecimal(domainNewOrderSingle.getPx())));
                 // Add the Party Group
         NewOrderSingle.NoPartyIDs partyIDGroup = new NewOrderSingle.NoPartyIDs();
         partyIDGroup.set(new PartyID(domainNewOrderSingle.getClientID()));

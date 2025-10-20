@@ -57,6 +57,9 @@ public class ExecutionReportFactory {
         if (executionReport.isSetTradeDate()) {
             domainExecutionReport.setTradeDate(executionReport.getTradeDate().toString());
         }
+        if (executionReport.isSetText()) {
+            domainExecutionReport.setText(executionReport.getText().toString());
+        }
         return domainExecutionReport;
     }
 }
