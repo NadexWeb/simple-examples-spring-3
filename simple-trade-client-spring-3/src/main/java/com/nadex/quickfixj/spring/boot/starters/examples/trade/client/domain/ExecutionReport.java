@@ -7,6 +7,7 @@ public class ExecutionReport extends Message {
     public String symbol;
     public String orderID;
     public String clientOrderID;
+    // public List<Party> parties;
     public String execID;
     public String execType;
     public String ordStatus;

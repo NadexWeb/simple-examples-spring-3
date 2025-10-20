@@ -1,4 +1,4 @@
-package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.to.fix;
+package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.domain;
 
 import quickfix.field.*;
 import quickfix.fix50sp2.OrderCancelReplaceRequest;

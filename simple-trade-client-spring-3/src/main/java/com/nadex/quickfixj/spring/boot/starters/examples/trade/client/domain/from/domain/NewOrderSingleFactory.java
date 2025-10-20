@@ -1,4 +1,4 @@
-package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.to.fix;
+package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.domain;
 
 import quickfix.field.*;
 import quickfix.fix50sp2.NewOrderSingle;
@@ -16,7 +16,6 @@ public class NewOrderSingleFactory {
         NewOrderSingle fixNewOrderSingle =  new NewOrderSingle();
 
         fixNewOrderSingle.set(new Symbol(domainNewOrderSingle.getSymbol()));
-        fixNewOrderSingle.set(new ClOrdID(UUID.randomUUID().toString()));
         fixNewOrderSingle.set(new OrderQty(Double.parseDouble(domainNewOrderSingle.getQty())));
         fixNewOrderSingle.set(new Price(Double.parseDouble(domainNewOrderSingle.getPx())));
                 // Add the Party Group
@@ -53,6 +52,8 @@ public class NewOrderSingleFactory {
                 fixNewOrderSingle.set(new OrdType(OrdType.STOP_LIMIT));
                 break;
         }
+        //generated here
+        fixNewOrderSingle.set(new ClOrdID(UUID.randomUUID().toString()));
         fixNewOrderSingle.set(new TransactTime(LocalDateTime.now()));
         return fixNewOrderSingle;
     }

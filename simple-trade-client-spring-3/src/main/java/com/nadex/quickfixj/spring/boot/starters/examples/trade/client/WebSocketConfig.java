@@ -12,12 +12,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		registry.enableSimpleBroker("/topic");
 		registry.setApplicationDestinationPrefixes("/app");
-		//registry.setPreservePublishOrder(true);
+		registry.setPreservePublishOrder(true);
 	}
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/trade-websocket");
-		//registry.setPreserveReceiveOrder(true);
+		registry.setPreserveReceiveOrder(true);
 	}
 }

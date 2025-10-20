@@ -2,11 +2,34 @@ const stompClient = new StompJs.Client({
     brokerURL: 'ws://localhost:8080/trade-websocket'
 });
 
+// so we need capability to use the working orders list to get the data to support the
+// order cancel and order cancel replace request funtionality
+
+// I image that the working orders could be in a table with a choice to cancel or update the working order
+
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
     stompClient.subscribe('/topic/messages', (message) => {
         const myMsg = JSON.parse(message.body)
+        if (myMsg.msgType === '8' && myMsg.execType !== 'I') {  // exec report and not result of order status request
+            if (myMsg.ordStatus === '0' ||
+                myMsg.ordStatus === '1') {
+                // these are working order states
+                // put in working orders with the important fields
+                // we would use for order cancel or order cancel replace request
+                // Symbol
+                // Original Client Order ID
+                // Order Quantity
+                // Price
+                // Client ID
+                // Side
+                // Order Type
+                // Time In Force
+            } else if (!['6', '8', 'A', 'B', 'D', 'E'].includes(myMsg.ordStatus)) {
+                // any other states, the order is no longer working and should be removed from working orders
+            }
+        }
         showMessage(JSON.stringify(myMsg));
     });
 };
@@ -43,6 +66,7 @@ function disconnect() {
 }
 
 function sendOrderCancel() {
+    // TODO add outbound messages to table
     stompClient.publish({
         destination: "/app/order-cancel",
         body: JSON.stringify(
@@ -58,6 +82,7 @@ function sendOrderCancel() {
 }
 
 function sendOrderCancelReplaceRequest() {
+    // TODO add outbound messages to table
     // In this example ClOrdId and TransactTime are populated by the consumer of this message
     // OrigClOrdID must however be supplied
     stompClient.publish({
@@ -77,8 +102,8 @@ function sendOrderCancelReplaceRequest() {
     });
 }
 
-
 function sendNewOrderSingle() {
+    // TODO add outbound messages to table
     // In this example ClOrdId and TransactTime are populated by the consumer of this message
     stompClient.publish({
         destination: "/app/new-order-single",
