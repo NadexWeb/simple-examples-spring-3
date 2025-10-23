@@ -72,16 +72,15 @@ class WebSocketManager {
       if (message.ordStatus === '0') {
         window.workingOrdersManager.newOrder(message);
       } else if (message.ordStatus === '1') {
-        // PARTIAL FILL
         window.workingOrdersManager.orderFilled(message);
       } else if (message.ordStatus === '2') {
-        // FILLED
+        // TODO:
         window.workingOrdersManager.partialFill(message);
       } else if (message.ordStatus === '4') {
-        // CANCELLED
+        // TODO:
         window.workingOrdersManager.orderCancelled(message);
       } else if (message.ordStatus === '5') {
-        // REPLACED
+        // TODO: When sending a replace, there is no common ID between the new
         window.workingOrdersManager.orderReplaced(message);
       }
     }
@@ -103,8 +102,8 @@ class WorkingOrdersManager {
     delete this.workingOrders[order.orderID];
   }
   partialFill(order) {
-    console.error('Not implemented!');
-    window.workingOrdersTableController.replaceRow(order);
+    console.error('Partial fill not implemented!');
+    // window.workingOrdersTableController.replaceRow(order);
     // TODO: update this.workingOrders
   }
   orderCancelled(order) {
@@ -113,7 +112,7 @@ class WorkingOrdersManager {
   }
   orderReplaced(order) {
     console.error('Not implemented!');
-    window.workingOrdersTableController.replaceRow(order);
+    // window.workingOrdersTableController.replaceRow(order);
     // TODO: update this.workingOrders
   }
 }
@@ -359,7 +358,7 @@ class ReplaceWorkingOrderTicketController {
     const { clientID, workingOrders } = window.workingOrdersManager;
     const {
       symbol,
-      origClOrdID,
+      clientOrderID,
       orderQty,
       price,
       side,
@@ -372,7 +371,7 @@ class ReplaceWorkingOrderTicketController {
     this.show();
 
     $('#orderCancelReplaceRequestSymbol').val(symbol);
-    $('#orderCancelReplaceRequestOrigClOrdID').val(origClOrdID);
+    $('#orderCancelReplaceRequestOrigClOrdID').val(clientOrderID);
     $('#orderCancelReplaceRequestQty').val(orderQty);
     $('#orderCancelReplaceRequestPx').val(price);
     $('#orderCancelReplaceRequestClientID').val(clientID);
@@ -412,6 +411,7 @@ const tradeSides = {
   1: 'BUY',
   2: 'SELL',
 };
+
 // ********************************* //
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -445,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 });
 
+// Example new order Execution Report
 const exampleMsg = {
   avgPx: '0',
   clientOrderID: '5bc3eba7-5489-4e10-82ec-e395723f61a2',
