@@ -43,7 +43,7 @@
                     <table class="mt-2 table table-fixed w-full">
                         <thead class='bg-gray-200'>
                             <tr class='divide-x divide-gray-300'>
-                                <th class='text-center text-xs px-1 font-semibold'>Accepted At</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Transact Time</th>
                                 <th class='text-center text-xs px-1 font-semibold'>Symbol</th>
                                 <th class='text-center text-xs px-1 font-semibold'>Client Order ID</th>
                                 <th class='text-center text-xs px-1 font-semibold'>Order ID</th>
@@ -200,14 +200,14 @@
                             <label class='col-span-1' for="orderCancelReplaceRequestOrd-type-select">Order Type</label>
                             <select class='col-span-1' name="ordType"
                                 id="orderCancelReplaceRequestOrd-type-select">
-                                <option value="LIMIT">Limit</option>
+                                <option selected value="LIMIT">Limit</option>
                                 <option value="STOP_LIMIT">Stop Limit</option>
                             </select>
 
                             <label class='col-span-1' for="orderCancelReplaceRequestTif-select">Time In Force</label>
                             <select class='col-span-1' name="tif"
                                 id="orderCancelReplaceRequestTif-select">
-                                <option value="GTC">Good 'till Cancel</option>
+                                <option selected value="GTC">Good 'till Cancel</option>
                                 <option value="IOC">Immediate or Cancel</option>
                                 <option value="FOK">Fill or Kill</option>
                             </select>

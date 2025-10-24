@@ -68,20 +68,20 @@ class WebSocketManager {
 
   _handleExecutionReport(message) {
     if (message.execType !== 'I') {
-      // exec report and not result of order status request
       if (message.ordStatus === '0') {
-        window.workingOrdersManager.newOrder(message);
+        if (message.execType === '0') {
+          window.workingOrdersManager.newOrder(message);
+        } else if (message.execType === '4') {
+          window.workingOrdersManager.orderCancelled(message);
+        } else if (message.execType === '5') {
+          window.workingOrdersManager.orderReplaced(message);
+        }
+        // Order Filled
       } else if (message.ordStatus === '1') {
-        window.workingOrdersManager.orderFilled(message);
+        window.workingOrdersManager.orderFilled(message); // TODO:
+        // Order Partial Fill
       } else if (message.ordStatus === '2') {
-        // TODO:
-        window.workingOrdersManager.partialFill(message);
-      } else if (message.ordStatus === '4') {
-        // TODO:
-        window.workingOrdersManager.orderCancelled(message);
-      } else if (message.ordStatus === '5') {
-        // TODO: When sending a replace, there is no common ID between the new
-        window.workingOrdersManager.orderReplaced(message);
+        window.workingOrdersManager.partialFill(message); // TODO:
       }
     }
   }
@@ -94,26 +94,28 @@ class WorkingOrdersManager {
   }
 
   newOrder(order) {
-    this.workingOrders[order.orderID] = order;
+    this.workingOrders[order.clientOrderID] = order;
     window.workingOrdersTableController.addRow(order);
   }
   orderFilled(order) {
-    window.workingOrdersTableController.removeRow(order.orderID);
-    delete this.workingOrders[order.orderID];
+    window.workingOrdersTableController.removeRow(order.clientOrderID);
+    delete this.workingOrders[order.clientOrderID];
   }
   partialFill(order) {
     console.error('Partial fill not implemented!');
-    // window.workingOrdersTableController.replaceRow(order);
-    // TODO: update this.workingOrders
   }
   orderCancelled(order) {
-    window.workingOrdersTableController.removeRow(order.orderID);
-    delete this.workingOrders[order.orderID];
+    window.workingOrdersTableController.removeRow(order.clientOrderID);
+    delete this.workingOrders[order.clientOrderID];
   }
   orderReplaced(order) {
-    console.error('Not implemented!');
-    // window.workingOrdersTableController.replaceRow(order);
-    // TODO: update this.workingOrders
+    delete this.workingOrders[order.originalClientOrderID];
+    this.workingOrders[order.clientOrderID] = order;
+
+    window.workingOrdersTableController.replaceRow(
+      order.originalClientOrderID,
+      order
+    );
   }
 }
 
@@ -125,17 +127,18 @@ class WorkingOrdersTableController {
   }
 
   addRow({
+    transactTime,
     symbol,
     orderID,
     orderQty,
     price,
     clientOrderID,
     side,
-    timeInForce, // TODO: this is not present on message
+    timeInForce,
     orderType, // TODO: this is not present on message
   }) {
     const fields = [
-      new Date().toLocaleTimeString(),
+      transactTime,
       symbol,
       clientOrderID,
       orderID,
@@ -153,26 +156,27 @@ class WorkingOrdersTableController {
     cells.push(`<td class='text-red-500 font-bold px-2 py-1 text-left text-xs'>
 			<button
 				class='cursor-pointer p-1'
-				onclick="window.cancelWorkingOrderTicketController.newTicket.call(window.cancelWorkingOrderTicketController, '${orderID}')"
+				onclick="window.cancelWorkingOrderTicketController.newTicket.call(window.cancelWorkingOrderTicketController, '${clientOrderID}')"
 				>Cancel</button>
 		</td>`);
     cells.push(`<td class='text-[#00aeef] font-bold px-2 py-1 text-left text-xs'>
 			<button
 				class='cursor-pointer p-1'
-				onclick="window.replaceWorkingOrderTicketController.newTicket.call(window.replaceWorkingOrderTicketController, '${orderID}')"
+				onclick="window.replaceWorkingOrderTicketController.newTicket.call(window.replaceWorkingOrderTicketController, '${clientOrderID}')"
 				>Edit</button
 		</td>`);
-    const rowHtml = `<tr id=${workingOrderRowId(orderID)}>${cells}</tr>`;
+    const rowHtml = `<tr id=${workingOrderRowId(clientOrderID)}>${cells}</tr>`;
     this.workingOrdersTable.append(rowHtml);
   }
 
-  removeRow(orderId) {
-    const tableRowId = workingOrderRowId(orderId);
+  removeRow(clientOrderId) {
+    const tableRowId = workingOrderRowId(clientOrderId);
     document.querySelector(`#${tableRowId}`).remove();
   }
 
-  replaceRow() {
-    console.log(...arguments);
+  replaceRow(existingRowId, newOrder) {
+    this.removeRow(existingRowId);
+    this.addRow(newOrder);
   }
 }
 
@@ -362,7 +366,7 @@ class ReplaceWorkingOrderTicketController {
       orderQty,
       price,
       side,
-      orderType,
+      orderType, // TODO: this is not returned on FIX working order accepted message
       timeInForce,
     } = workingOrders[orderID];
 
@@ -376,8 +380,6 @@ class ReplaceWorkingOrderTicketController {
     $('#orderCancelReplaceRequestPx').val(price);
     $('#orderCancelReplaceRequestClientID').val(clientID);
     $('#orderCancelReplaceRequestSide-select').val(tradeSides[side]);
-    $('#orderCancelReplaceRequestOrd-type-select').val(orderType);
-    $('#orderCancelReplaceRequestTif-select').val(timeInForce);
   }
 
   submitReplace(e) {
@@ -418,7 +420,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.websocketManager = new WebSocketManager();
   window.workingOrdersManager = new WorkingOrdersManager();
 
-  // UI Controllers
   window.wsControlsController = new WSControlsController(
     '#connect',
     '#disconnect',
