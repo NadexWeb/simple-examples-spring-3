@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class OrderCancel extends Message {
-    public String origClOrdID;
-    public String clientID;
-    public String symbol;
-    public String side;
-    public String qty;
+    private String origClOrdID;
+    private String clientID;
+    private String symbol;
+    private String side;
+    private String qty;
 }

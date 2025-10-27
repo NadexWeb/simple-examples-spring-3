@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class Message {
-    public String msgType;
+    private String msgType;
 }

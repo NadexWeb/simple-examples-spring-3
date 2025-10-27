@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class BusinessMessageReject extends Message {
-    String refSeqNum;
-    String refMsgType;
-    String businessRejectRefID;
-    String businessRejectReason;
-    String text;
+    private String refSeqNum;
+    private String refMsgType;
+    private String businessRejectRefID;
+    private String businessRejectReason;
+    private String text;
 }

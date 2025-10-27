@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class OrderCancelReplaceRequest extends Message {
-    public String origClOrdID;
-    public String clientID;
-    public String symbol;
-    public String side;
-    public String qty;
-    public String ordType;
-    public String px;
-    public String tif;
+    private String origClOrdID;
+    private String clientID;
+    private String symbol;
+    private String side;
+    private String qty;
+    private String ordType;
+    private String px;
+    private String tif;
 }

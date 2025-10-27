@@ -4,10 +4,10 @@ import lombok.Data;
 
 @Data
 public class OrderCancelReject extends Message {
-    public String orderID;
-    public String clientOrderID;
-    public String ordStatus;
-    public String cxlRejResponseTo;
-    public String cxlRejReason;
-    public String text;
+    private String orderID;
+    private String clientOrderID;
+    private String ordStatus;
+    private String cxlRejResponseTo;
+    private String cxlRejReason;
+    private String text;
 }

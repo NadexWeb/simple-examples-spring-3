@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class NewOrderSingle extends Message {
-	public String symbol;
-	public String qty;
-	public String px;
-	public String clientID;
-	public String side;
-	public String ordType;
-	public String tif;
+	private String symbol;
+	private String qty;
+	private String px;
+	private String clientID;
+	private String side;
+	private String ordType;
+	private String tif;
 }

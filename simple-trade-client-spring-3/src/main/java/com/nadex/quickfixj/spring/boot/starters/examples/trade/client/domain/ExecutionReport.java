@@ -4,25 +4,25 @@ import lombok.Data;
 
 @Data
 public class ExecutionReport extends Message {
-    public String symbol;
-    public String orderID;
-    public String clientOrderID;
-    public String originalClientOrderID;
-    public String clientID;  // from the Party that was received in an execution report
-    public String execID;
-    public String execType;
-    public String ordStatus;
-    public String ordRejReason;
-    public String side;
-    public String orderQty;
-    public String price;
-    public String timeInForce;
-    public String lastQty;
-    public String lastPx;
-    public String leavesQty;
-    public String cumQty;
-    public String avgPx;
-    public String tradeDate;
-    public String transactTime;
-    public String text;
+    private String symbol;
+    private String orderID;
+    private String clientOrderID;
+    private String originalClientOrderID;
+    private String clientID;  // from the Party that was received in an execution report
+    private String execID;
+    private String execType;
+    private String ordStatus;
+    private String ordRejReason;
+    private String side;
+    private String orderQty;
+    private String price;
+    private String timeInForce;
+    private String lastQty;
+    private String lastPx;
+    private String leavesQty;
+    private String cumQty;
+    private String avgPx;
+    private String tradeDate;
+    private String transactTime;
+    private String text;
 }

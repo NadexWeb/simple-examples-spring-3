@@ -15,9 +15,12 @@
  */
 package com.nadex.quickfixj.spring.boot.starters.examples.trade.client;
 
+import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.Party;
+import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.PositionReport;
 import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.fix.BusinessMessageRejectFactory;
 import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.fix.ExecutionReportFactory;
 import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.fix.OrderCancelRejectFactory;
+import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.fix.PositionReportFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.stereotype.Component;
@@ -26,6 +29,9 @@ import quickfix.IncorrectTagValue;
 import quickfix.SessionID;
 import quickfix.UnsupportedMessageType;
 import quickfix.fix50sp2.MessageCracker;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * ApplicationMessageCracker extends the QuickFIX/J MessageCracker to provide an implementation of callbacks
@@ -47,6 +53,8 @@ public class FixMessageCracker extends MessageCracker {
             throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
         log.info("ExecutionReport received: {}", executionReport);
         this.messageSendingOperations.convertAndSend(PATH, ExecutionReportFactory.fromFix(executionReport));
+        //TODO remove the following it is just here to force the output of a Position Report to test the serialisation
+        this.messageSendingOperations.convertAndSend(PATH, PositionReportFactory.cheekyLittleTestReport());
     }
 
     @Override
