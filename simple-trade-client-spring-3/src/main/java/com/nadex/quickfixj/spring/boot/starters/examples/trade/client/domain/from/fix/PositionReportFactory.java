@@ -34,10 +34,10 @@ public class PositionReportFactory {
         positionReport.setSettlPriceType(1);
         positionReport.setTotalNumPosReports(1);
         positionReport.setParties(new ArrayList<Party>() {{
-            add(new Party("sd", 'D', 3));
+            add(new Party("APartyID", 'D', 3));
         }});
         positionReport.setUnderlyings(new ArrayList<PositionReport.Underlying>() {{
-            add(new PositionReport.Underlying("100.0", 1));
+            add(new PositionReport.Underlying("AnUnderlyingSymbol", "100.0", 1));
         }});
         positionReport.setPositionQtys(new ArrayList<PositionReport.PositionQty>() {{
             add(new PositionReport.PositionQty("TQ", 10, 0, 1));

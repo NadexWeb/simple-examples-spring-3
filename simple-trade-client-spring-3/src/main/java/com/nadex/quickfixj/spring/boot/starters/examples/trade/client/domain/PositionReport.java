@@ -29,6 +29,7 @@ public class PositionReport {
     @Data
     @AllArgsConstructor
     public static class Underlying {
+        private String underlyingSymbol;
         private String underlyingSettlPrice;
         private int underlyingSettlPriceType;
     }
