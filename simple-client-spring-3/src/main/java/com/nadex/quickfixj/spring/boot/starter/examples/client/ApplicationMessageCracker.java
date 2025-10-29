@@ -17,8 +17,14 @@ package com.nadex.quickfixj.spring.boot.starter.examples.client;
 
 import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.InstrumentFactory;
 import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.Instrument;
+import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.MarketDataSnapshot;
+import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.from.fix.MarketDataSnapshotFactory;
 import com.nadex.quickfixj.spring.boot.starter.examples.client.filter.FilterProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.core.MessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Component;
 import quickfix.FieldNotFound;
 import quickfix.IncorrectTagValue;
 import quickfix.Session;
@@ -42,6 +48,7 @@ import java.util.regex.Pattern;
  * for the messages of interest
  */
 @Slf4j
+@Component
 public class ApplicationMessageCracker extends MessageCracker {
 
     private final Set<String> underlyingSymbols = new HashSet<>();
@@ -56,7 +63,13 @@ public class ApplicationMessageCracker extends MessageCracker {
 
     public static final String EMPTY_STRING = "";
 
-    public ApplicationMessageCracker(FilterProperties filterProperties) {
+    public static final String PATH = "/topic/messages";
+
+    private final MessageSendingOperations<String> messageSendingOperations;
+
+    public ApplicationMessageCracker(FilterProperties filterProperties, MessageSendingOperations<String> messageSendingOperations) {
+        this.messageSendingOperations = messageSendingOperations;
+
         if (null != filterProperties) {
             this.underlyingSymbols.addAll(filterProperties.getUnderlyingSymbols());
             this.underlyingSymbols.forEach(s -> log.info("Configured Filter Underlying Symbol {}", s));
@@ -128,6 +141,8 @@ public class ApplicationMessageCracker extends MessageCracker {
             throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
         log.info("Received Market Data Snapshot Full Refresh, Symbol:{}, number of MDEntries {}",
                 marketDataSnapshotFullRefresh.getSymbol().getValue(), marketDataSnapshotFullRefresh.getNoMDEntries().getValue());
+        MarketDataSnapshot message = MarketDataSnapshotFactory.fromFix(marketDataSnapshotFullRefresh);
+        messageSendingOperations.convertAndSend(PATH, message);
     }
 
     @Override

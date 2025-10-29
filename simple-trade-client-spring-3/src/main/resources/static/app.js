@@ -5,7 +5,7 @@
         - uses tailwindCSS for styling. This provides composable helper classes which you add to elements to style them.
 */
 
-class WebSocketManager {
+class OrderEntryWebsocketManager {
   client = null;
   isConnected = false;
   socketState = 'INACTIVE';
@@ -92,6 +92,59 @@ class WebSocketManager {
   _handlePositionReport(message) {
     console.log('HANDLING POSITION: ', JSON.stringify(message))
   }
+}
+
+class MarketDataWebsocketManager {
+  client = null;
+  isConnected = false;
+  socketState = 'INACTIVE';
+
+  constructor() {
+    this.client = new StompJs.Client({
+      brokerURL: 'ws://localhost:8081/market-data-websocket',
+    });
+
+    this.client.onConnect = (frame) => {
+      this.isConnected = true;
+      console.log('Connected: ' + frame);
+      this.client.subscribe('/topic/messages', this._handleMessage.bind(this));
+    };
+
+    this.client.onDisconnect = () => {
+      this.isConnected = false;
+    };
+
+    this.client.onWebSocketError = (error) => {
+      console.error('Error with websocket', error);
+    };
+
+    this.client.onStompError = (frame) => {
+      console.error('Broker reported error: ' + frame.headers['message']);
+      console.error('Additional details: ' + frame.body);
+    };
+  }
+
+  connect() {
+    console.log('Socket connecting...');
+    this.client.activate();
+  }
+
+  sendMessage(destination, body) {
+    const jsonBody = JSON.stringify(body);
+    console.log(`sending message\nto: ${destination}\nbody: ${jsonBody}`);
+    this.client.publish({ destination, body: jsonBody });
+  }
+
+  async disconnect() {
+    console.log('Socket disconnecting...');
+    await this.client.deactivate();
+    this.isConnected = false;
+  }
+
+  _handleMessage(message) {
+    console.log(message)
+  }
+
 }
 
 class WorkingOrdersManager {
@@ -223,7 +276,7 @@ class WSControlsController {
   handleConnectClicked() {
     this.connectBtn.prop('disabled', true);
     this.disconnectBtn.prop('disabled', false);
-    window.websocketManager.connect();
+    window.orderEntryWebsocketManager.connect();
   }
 
   setSocketStatusIndicator(state) {
@@ -242,11 +295,11 @@ class WSControlsController {
   }
 
   async handleDisconnectClicked() {
-    if (!window.websocketManager.isConnected) {
+    if (!window.orderEntryWebsocketManager.isConnected) {
       console.log('Disconnect called but you are not connected!');
       return;
     }
-    await window.websocketManager.disconnect();
+    await window.orderEntryWebsocketManager.disconnect();
     this.connectBtn.prop('disabled', false);
     this.disconnectBtn.prop('disabled', true);
   }
@@ -282,7 +335,7 @@ class NewWorkingOrderTicketController {
     };
 
     window.workingOrdersManager.clientID = order.clientID;
-    window.websocketManager.sendMessage('/app/new-order-single', order);
+    window.orderEntryWebsocketManager.sendMessage('/app/new-order-single', order);
     window.messagesController.pushMessage('OUTBOUND', order);
   }
 }
@@ -339,7 +392,7 @@ class CancelWorkingOrderTicketController {
       qty: $('#orderCancelQty').val(),
     };
     window.messagesController.pushMessage('OUTBOUND', messageBody);
-    window.websocketManager.sendMessage('/app/order-cancel', messageBody);
+    window.orderEntryWebsocketManager.sendMessage('/app/order-cancel', messageBody);
   }
 }
 
@@ -403,7 +456,7 @@ class ReplaceWorkingOrderTicketController {
       px: $('#orderCancelReplaceRequestPx').val(), // price is required if a limit order
       tif: $('#orderCancelReplaceRequestTif-select').val(),
     };
-    window.websocketManager.sendMessage(
+    window.orderEntryWebsocketManager.sendMessage(
       '/app/order-cancel-replace-request',
       messageBody
     );
@@ -424,7 +477,7 @@ const tradeSides = {
 // ********************************* //
 
 document.addEventListener('DOMContentLoaded', () => {
-  window.websocketManager = new WebSocketManager();
+  window.orderEntryWebsocketManager = new OrderEntryWebsocketManager();
   window.workingOrdersManager = new WorkingOrdersManager();
 
   window.wsControlsController = new WSControlsController(

@@ -15,36 +15,28 @@
  */
 package com.nadex.quickfixj.spring.boot.starter.examples.client;
 
+import com.nadex.quickfixj.spring.boot.starter.examples.client.filter.FilterProperties;
 import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import quickfix.Application;
-import quickfix.FileLogFactory;
-import quickfix.LogFactory;
-import quickfix.SessionSettings;
 import quickfix.fix50sp2.MessageCracker;
-import com.nadex.quickfixj.spring.boot.starter.examples.client.filter.FilterProperties;
 
 @Slf4j
 @EnableQuickFixJClient
 @SpringBootApplication
 public class SimpleClientSpring3 {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SimpleClientSpring3.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SimpleClientSpring3.class, args);
+    }
 
-	@Bean
-	public Application clientApplication(MessageCracker messageCracker, FilterProperties filterProperties) {
-		return new ClientApplicationAdapter(messageCracker, filterProperties);
-	}
-
-	@Bean
-	public MessageCracker messageCracker(FilterProperties filterProperties) {
-		return new ApplicationMessageCracker(filterProperties);
-	}
+    @Bean
+    public Application clientApplication(MessageCracker messageCracker, FilterProperties filterProperties) {
+        return new ClientApplicationAdapter(messageCracker, filterProperties);
+    }
 
 }
