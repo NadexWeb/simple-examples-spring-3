@@ -64,6 +64,9 @@ class WebSocketManager {
     if (parsedMessage.msgType === '8') {
       this._handleExecutionReport(parsedMessage);
     }
+    if (parsedMessage.msgType === 'AP') {
+      this._handlePositionReport(parsedMessage);
+    }
   }
 
   _handleExecutionReport(message) {
@@ -84,6 +87,10 @@ class WebSocketManager {
         window.workingOrdersManager.partialFill(message); // TODO:
       }
     }
+  }
+
+  _handlePositionReport(message) {
+    console.log('HANDLING POSITION: ', JSON.stringify(message))
   }
 }
 

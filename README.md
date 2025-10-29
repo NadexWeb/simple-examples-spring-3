@@ -60,3 +60,14 @@ Update the QuickFIX/J configuration options in the `application.yml` file using 
 
 ![component-diagram](./src/main/puml/plantuml-component.png)
 
+# UI Development
+For easier UI work, add the following line to your application.yaml:
+
+``` 
+spring:
+  web:
+    resources:
+      static-locations[0]: "file:src/main/resources/static/"
+```
+
+This will allow you to refetch the static content (html, css, js) on browser reload, rather than needing to run a maven build to see changes.
