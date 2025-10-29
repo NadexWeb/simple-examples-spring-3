@@ -94,11 +94,11 @@ class MarketListTableController {
     const arr = new Array(numberOfMarkets);
     window.marketDataManager.markets.forEach((value) => {
       arr[i] = `<tr>
-        <td class='text-center'>${value.symbol}</td>
+        <td class='text-center'>${value.symbol.trim()}</td>
         <td class='text-center text-green-500'>${value.bid.mdEntryPx}</td>
-        <td class='text-center text-green-500'>${value.bid.mdEntrySize}</td>
+        <td class='text-center'>${value.bid.mdEntrySize}</td>
         <td class='text-center text-red-500'>${value.offer.mdEntryPx}</td>
-        <td class='text-center text-red-500'>${value.offer.mdEntrySize}</td>
+        <td class='text-center'>${value.offer.mdEntrySize}</td>
         <td class='text-center'>${value.marketDepth}</td>
       </tr>`;
       i++;
@@ -167,6 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.marketListTableController = new MarketListTableController(
     '#market-list-table-body',
     '#number-of-markets',
-    1000
+    2000 // update interval in milliseconds
   );
 });

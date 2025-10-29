@@ -80,17 +80,17 @@ class OrderEntryWebsocketManager {
           window.workingOrdersManager.orderReplaced(message);
         }
         // Order Filled
-      } else if (message.ordStatus === '1') {
-        window.workingOrdersManager.orderFilled(message); // TODO:
-        // Order Partial Fill
       } else if (message.ordStatus === '2') {
+        window.workingOrdersManager.orderFilled(message);
+        window.positionsManager.handlePositionFill(message);
+      } else if (message.ordStatus === '1') {
         window.workingOrdersManager.partialFill(message); // TODO:
       }
     }
   }
 
   _handlePositionReport(message) {
-    console.log('HANDLING POSITION: ', JSON.stringify(message))
+    console.log('HANDLING POSITION: ', JSON.stringify(message));
   }
 }
 
@@ -142,9 +142,8 @@ class MarketDataWebsocketManager {
   }
 
   _handleMessage(message) {
-    console.log(message)
+    console.log(message);
   }
-
 }
 
 class WorkingOrdersManager {
@@ -231,12 +230,90 @@ class WorkingOrdersTableController {
 
   removeRow(clientOrderId) {
     const tableRowId = workingOrderRowId(clientOrderId);
+    // I can't get jquery's .remove() to work so using native here
     document.querySelector(`#${tableRowId}`).remove();
   }
 
   replaceRow(existingRowId, newOrder) {
     this.removeRow(existingRowId);
     this.addRow(newOrder);
+  }
+}
+
+class PositionsManager {
+  positions = {};
+
+  handlePositionFill(positionFillMessage) {
+    const { symbol, side, lastPx, lastQty, transactTime } = positionFillMessage;
+    const existingPosition = this.positions[symbol];
+
+    if (existingPosition) {
+      let newPositionQty;
+
+      if (side === '1') {
+        newPositionQty = parseInt(lastQty);
+      } else if (side === '2') {
+        newPositionQty = -parseInt(lastQty);
+      }
+
+      // get new position average price, based on:
+      // existing price and size
+      // and newly filled order price and size
+      existingPosition.averagePrice = getAveragePrice(
+        existingPosition.averagePrice,
+        existingPosition.quantity,
+        parseFloat(lastPx),
+        newPositionQty
+      );
+      existingPosition.quantity += newPositionQty;
+      existingPosition.lastUpdated = new Date(transactTime);
+
+      window.positionsTableController.replaceRow(symbol, existingPosition);
+    } else {
+      this.positions[symbol] = {
+        symbol,
+        averagePrice: parseFloat(lastPx),
+        quantity: side === '1' ? parseInt(lastQty) : -parseInt(lastQty),
+        lastUpdated: new Date(),
+      };
+      window.positionsTableController.addRow(this.positions[symbol]);
+    }
+  }
+}
+
+class PositionsTableController {
+  positionsTable = null;
+
+  constructor(positionsTableSelector) {
+    this.positionsTable = $(positionsTableSelector);
+  }
+
+  addRow({ symbol, quantity, averagePrice, lastUpdated }) {
+    const qtyClass =
+      parseFloat(quantity) >= 0 ? 'text-green-500' : 'text-red-500';
+    const qtyPrefix = parseFloat(quantity) >= 0 ? '+' : '';
+    const html = `
+      <tr id="${getPositionRowId(symbol)}">
+        <td class='px-1 text-center text-xs overflow-hidden truncate' title="${symbol}">${symbol}</td>
+        <td class='px-1 text-center text-xs overflow-hidden truncate ${qtyClass}' title="${qtyPrefix}${quantity}">${qtyPrefix}${quantity}</td>
+        <td class='px-1 text-center text-xs overflow-hidden truncate' title="${averagePrice}">${averagePrice.toFixed(
+      2
+    )}</td>
+        <td class='px-1 text-center text-xs overflow-hidden truncate' title="${lastUpdated.toLocaleTimeString()}">${lastUpdated.toLocaleTimeString()}</td>
+      </tr>
+      `;
+    this.positionsTable.append(html);
+  }
+
+  removeRow(symbol) {
+    const tableRowId = getPositionRowId(symbol);
+    // I can't get jquery's .remove() to work so using native here
+    document.querySelector(`#${tableRowId}`).remove();
+  }
+
+  replaceRow(existingSymbol, newPosition) {
+    this.removeRow(existingSymbol);
+    this.addRow(newPosition);
   }
 }
 
@@ -327,7 +404,7 @@ class NewWorkingOrderTicketController {
       msgType: 'D',
       symbol: $('#symbol').val(),
       qty: $('#qty').val(),
-      px: $('#px').val(),
+      px: `${$('#px').val()}`, // stringify this numerical input
       clientID: $('#clientID').val(),
       side: $('#side-select').val(),
       ordType: $('#ord-type-select').val(),
@@ -335,7 +412,10 @@ class NewWorkingOrderTicketController {
     };
 
     window.workingOrdersManager.clientID = order.clientID;
-    window.orderEntryWebsocketManager.sendMessage('/app/new-order-single', order);
+    window.orderEntryWebsocketManager.sendMessage(
+      '/app/new-order-single',
+      order
+    );
     window.messagesController.pushMessage('OUTBOUND', order);
   }
 }
@@ -392,7 +472,10 @@ class CancelWorkingOrderTicketController {
       qty: $('#orderCancelQty').val(),
     };
     window.messagesController.pushMessage('OUTBOUND', messageBody);
-    window.orderEntryWebsocketManager.sendMessage('/app/order-cancel', messageBody);
+    window.orderEntryWebsocketManager.sendMessage(
+      '/app/order-cancel',
+      messageBody
+    );
   }
 }
 
@@ -469,16 +552,28 @@ function workingOrderRowId(id) {
   return `wo-${id}`;
 }
 
+// symbol contains '.' characters which break css selectors
+function getPositionRowId(symbol) {
+  const sanitisedSymbold = symbol.replace(/[.:]/g, '_');
+  return `pos-${sanitisedSymbold}`;
+}
+
 const tradeSides = {
   1: 'BUY',
   2: 'SELL',
 };
 
+function getAveragePrice(existingAvgPrice, existingQty, fillPrice, fillQty) {
+  const totalCostExisting = existingAvgPrice * existingQty;
+  const totalCostNew = fillPrice * fillQty;
+  const newTotalQty = existingQty + fillQty;
+  return (totalCostExisting + totalCostNew) / newTotalQty;
+}
+
 // ********************************* //
 
 document.addEventListener('DOMContentLoaded', () => {
   window.orderEntryWebsocketManager = new OrderEntryWebsocketManager();
-  window.workingOrdersManager = new WorkingOrdersManager();
 
   window.wsControlsController = new WSControlsController(
     '#connect',
@@ -486,9 +581,20 @@ document.addEventListener('DOMContentLoaded', () => {
     '#socket-status'
   );
   window.messagesController = new MessagesListController('#messages');
+
+  // Working Orders
+  window.workingOrdersManager = new WorkingOrdersManager();
   window.workingOrdersTableController = new WorkingOrdersTableController(
-    '#working-orders'
+    '#working-orders-table-body'
   );
+
+  // Positions
+  window.positionsManager = new PositionsManager();
+  window.positionsTableController = new PositionsTableController(
+    '#positions-table-body'
+  );
+
+  // Tickets
   window.newWorkingOrderTicketController = new NewWorkingOrderTicketController(
     '#send-new-order'
   );

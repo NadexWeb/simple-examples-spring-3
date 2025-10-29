@@ -50,7 +50,7 @@
                                 <th class='p-2'>&nbsp;</th>
                             </tr>
                         </thead>
-                        <tbody id="working-orders">
+                        <tbody id="working-orders-table-body">
                         </tbody>
                     </table>
                 </div>
@@ -60,21 +60,13 @@
                     <table class="mt-2 table table-fixed w-full">
                         <thead class='bg-gray-200'>
                             <tr class='divide-x divide-gray-300'>
-                                <th class='text-center text-xs px-1 font-semibold'>Transact Time</th>
                                 <th class='text-center text-xs px-1 font-semibold'>Symbol</th>
-                                <th class='text-center text-xs px-1 font-semibold'>Client Order ID</th>
-                                <th class='text-center text-xs px-1 font-semibold'>Order ID</th>
-                                <th class='text-center text-xs px-1 font-semibold'>Qty</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Size</th>
                                 <th class='text-center text-xs px-1 font-semibold'>Price</th>
-                                <th class='text-center text-xs px-1 font-semibold'>Client ID</th>
-                                <th class='text-center text-xs px-1 font-semibold'>Side</th>
-                                <th class='text-center text-xs px-1 font-semibold'>Time In Force</th>
-                                <th class='text-center text-xs px-1 font-semibold'>Order Type</th>
-                                <th class='p-2'>&nbsp;</th>
-                                <th class='p-2'>&nbsp;</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Last Update</th>
                             </tr>
                         </thead>
-                        <tbody id="positions">
+                        <tbody id="positions-table-body">
                         </tbody>
                     </table>
                 </div>
@@ -97,11 +89,11 @@
                                 placeholder="Symbol here...">
 
                             <label class='col-span-1' for="qty">Order Quantity</label>
-                            <input type="text" id="qty" class="text-sm col-span-1"
+                            <input value='25' type="text" id="qty" class="text-sm col-span-1"
                                 placeholder="Integer Quantity here">
 
-                            <label class='col-span-1' for="px">Price</label>
-                            <input type="text" id="px" class="text-sm col-span-1"
+                            <label class='col-span-1' for="px">Average Price</label>
+                            <input value=0.5 type="number" min='0' max='1' step='0.01' id="px" class="text-sm col-span-1"
                                 placeholder="Decimal Quantity here">
 
                             <label class='col-span-1' for="clientID">Client ID</label>

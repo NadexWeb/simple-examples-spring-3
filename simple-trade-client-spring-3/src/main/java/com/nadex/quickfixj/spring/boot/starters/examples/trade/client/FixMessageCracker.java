@@ -53,8 +53,6 @@ public class FixMessageCracker extends MessageCracker {
             throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
         log.info("ExecutionReport received: {}", executionReport);
         this.messageSendingOperations.convertAndSend(PATH, ExecutionReportFactory.fromFix(executionReport));
-        //TODO remove the following it is just here to force the output of a Position Report to test the serialisation
-        this.messageSendingOperations.convertAndSend(PATH, PositionReportFactory.cheekyLittleTestReport());
     }
 
     @Override
