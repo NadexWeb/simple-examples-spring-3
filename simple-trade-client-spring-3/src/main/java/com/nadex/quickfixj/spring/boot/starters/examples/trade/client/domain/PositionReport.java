@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 public class PositionReport {
+    private String msgType;
     private String posMaintRptID;
     private String posReqID;
     private int posReqType;

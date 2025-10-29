@@ -3,6 +3,7 @@ package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.fr
 import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.Party;
 import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.PositionReport;
 import quickfix.FieldNotFound;
+import quickfix.field.MsgType;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,14 @@ public class PositionReportFactory {
 
     public static PositionReport cheekyLittleTestReport() {
         PositionReport positionReport = new PositionReport();
+
+        // PositionQty (component)
+            // NoPositions(702) indicates how many positions are present here
+            // A position can have
+                // longQty
+                // shortQty
+
+        positionReport.setMsgType(MsgType.POSITION_REPORT);
         positionReport.setPosMaintRptID("ABCD");
         positionReport.setPosReqID("12");
         positionReport.setPosReqType(99);
