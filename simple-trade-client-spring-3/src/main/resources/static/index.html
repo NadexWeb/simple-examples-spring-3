@@ -1,80 +1,244 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Order Entry Example</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
     <link href="/main.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="/app.js"></script>
 </head>
+
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
+    <noscript>
+        <h2 style="color: #ff0000">Seems your browser doesn't support
+            Javascript! Websocket relies on Javascript being
+            enabled. Please enable
+            Javascript and reload this page!</h2>
+    </noscript>
+    <div id="main-content">
+        <div class="grid grid-cols-12 space-x-8">
+            <div class="col-span-8 flex flex-col">
+                <div
+                    class='basis-[300px] flex-grow border border-gray-300 p-2 overflow-hidden text-xs'>
+                    <h2 class='text-lg font-semibold'>Messages</h2>
+                    <ul id='messages'
+                        class='overflow-y-auto divide-y divide-gray-400 h-full overflow-x-hidden break-all'>
+                    </ul>
+                </div>
+
+                <div
+                    class='mt-4 h-[200px] border border-gray-300 p-2 overflow-auto'>
+                    <h2 class='text-lg font-semibold'>Working Orders</h2>
+                    <table class="mt-2 table table-fixed w-full">
+                        <thead class='bg-gray-200'>
+                            <tr class='divide-x divide-gray-300'>
+                                <th class='text-center text-xs px-1 font-semibold'>Transact Time</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Symbol</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Client Order ID</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Order ID</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Qty</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Price</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Client ID</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Side</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Time In Force</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Order Type</th>
+                                <th class='p-2'>&nbsp;</th>
+                                <th class='p-2'>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody id="working-orders-table-body">
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                    class='mt-4 h-[200px] border border-gray-300 p-2 overflow-auto'>
+                    <h2 class='text-lg font-semibold'>Positions</h2>
+                    <table class="mt-2 table table-fixed w-full">
+                        <thead class='bg-gray-200'>
+                            <tr class='divide-x divide-gray-300'>
+                                <th class='text-center text-xs px-1 font-semibold'>Symbol</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Size</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Avg Price</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Last Update</th>
+                            </tr>
+                        </thead>
+                        <tbody id="positions-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class='col-span-4'>
+                <div class="flex space-x-4">
                     <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
+                    <button id="disconnect" class="btn btn-cancel" type="submit" disabled>Disconnect</button>
+                    <p>WebSocket Status:
+                        <span class='text-red-500' id='socket-status'>Disconnected</span>
+                    </p>
                 </div>
-            </form>
-        </div>
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="symbol">Symbol</label>
-                    <input type="text" id="symbol" class="form-control" placeholder="Symbol here...">
-                    </br>
-                    <label for="qty">Order Quantity</label>
-                    <input type="text" id="qty" class="form-control" placeholder="Integer Quantity here">
-                    </br>
-                    <label for="px">Price</label>
-                    <input type="text" id="px" class="form-control" placeholder="Decimal Quantity here">
-                    </br>
-                    <label for="clientID">Client ID</label>
-                    <input type="text" id="clientID" class="form-control" placeholder="Client ID here..">
-                    </br>
-                    <label for="side-select">Side</label>
-                    <select name="side" id="side-select">
-                        <option value="BUY">Buy</option>
-                        <option value="SELL">Sell</option>
-                    </select>
-                    </br>
-                    <label for="ord-type-select">Order Type</label>
-                    <select name="ordType" id="ord-type-select">
-                        <option value="LIMIT">Limit</option>
-                        <option value="STOP_LIMIT">Stop Limit</option>
-                    </select>
-                    </br>
-                    <label for="tif-select">Time In Force</label>
-                    <select name="tif" id="tif-select">
-                        <option value="IOC">Immediate or Cancel</option>
-                        <option value="FOK">Fill or Kill</option>
-                        <option value="GTC">Good 'till Cancel</option>
-                    </select>
+                <div class="mt-4 border border-gray-300 p-2 mb-8">
+                    <h2 class='font-semibold text-lg'>New Order Single</h2>
+                    <form class='mt-2'>
+                        <div class="grid grid-cols-2 gap-y-1">
+                            <label class='col-span-1' for="symbol">Symbol</label>
+                            <input type="text" id="symbol"
+                                class="text-sm col-span-1"
+                                placeholder="Symbol here...">
+
+                            <label class='col-span-1' for="qty">Order Quantity</label>
+                            <input value='25' type="text" id="qty" class="text-sm col-span-1"
+                                placeholder="Integer Quantity here">
+
+                            <label class='col-span-1' for="px">Average Price</label>
+                            <input value=0.5 type="number" min='0' max='1' step='0.01' id="px" class="text-sm col-span-1"
+                                placeholder="Decimal Quantity here">
+
+                            <label class='col-span-1' for="clientID">Client ID</label>
+                            <input type="text" id="clientID"
+                                class="text-sm col-span-1"
+                                placeholder="Client ID here..">
+
+                            <label class='col-span-1' for="side-select">Side</label>
+                            <select class='text-sm' name="side" id="side-select">
+                                <option value="BUY">Buy</option>
+                                <option value="SELL">Sell</option>
+                            </select>
+
+                            <label class='col-span-1' for="ord-type-select">Order Type</label>
+                            <select class='text-sm' name="ordType"
+                                id="ord-type-select">
+                                <option value="LIMIT">Limit</option>
+                                <option value="STOP_LIMIT">Stop Limit</option>
+                            </select>
+
+                            <label class='col-span-1' for="tif-select">Time In Force</label>
+                            <select class='text-sm' name="tif" id="tif-select">
+                                <option value="GTC" selected>Good 'till Cancel</option>
+                                <option value="IOC">Immediate or Cancel</option>
+                                <option value="FOK">Fill or Kill</option>
+                            </select>
+                        </div>
+                        <div class='flex flex-row mt-2'>
+                            <button disabled id="send-new-order"
+                                class="btn btn-default ml-auto"
+                                type="button">Send</button>
+                        </div>
+                    </form>
                 </div>
-                <button id="send" class="btn btn-default" type="submit">Send</button>
-            </form>
+
+                <div class="border border-gray-300 p-2 relative"
+                    id='cancel-order-ticket' hidden>
+                    <button id='hide-cancel-order-ticket'
+                        class='absolute top-0 right-2 cursor-pointer line-h-1'>×</button>
+                    <h2 class='font-semibold text-lg'>Cancel Order</h2>
+                    <form class="mt-2">
+                        <div class="grid grid-cols-2 gap-y-1">
+                            <label class='col-span-1'
+                                for="orderCancelSymbol">Symbol</label>
+                            <input type="text" id="orderCancelSymbol"
+                                class="col-span-1 text-sm form-control"
+                                placeholder="Symbol here...">
+
+                            <label class='col-span-1'
+                                for="orderCancelOrigClOrdID">Original Client Order ID</label>
+                            <input type="text" id="orderCancelOrigClOrdID"
+                                class="col-span-1 text-sm form-control"
+                                placeholder="Original Client Order ID here...">
+
+                            <label class='col-span-1' for="orderCancelQty">Order Quantity</label>
+                            <input type="text" id="orderCancelQty"
+                                class="col-span-1 text-sm form-control"
+                                placeholder="Integer Quantity here">
+
+                            <label class='col-span-1'
+                                for="orderCancelClientID">Client ID</label>
+                            <input type="text" id="orderCancelClientID"
+                                class="col-span-1 text-sm form-control"
+                                placeholder="Client ID here..">
+
+                            <label class='col-span-1'
+                                for="orderCancelSide-select">Side</label>
+                            <select class='col-span-1' name="side"
+                                id="orderCancelSide-select">
+                                <option value="BUY">Buy</option>
+                                <option value="SELL">Sell</option>
+                            </select>
+                        </div>
+                        <div class='flex flex-row mt-2'>
+                            <button id="sendOrderCancel"
+                                class="btn btn-default ml-auto"
+                                type="button">Send</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="border border-gray-300 p-2 relative"
+                    id='replace-order-ticket' hidden>
+                    <button id='hide-replace-order-ticket'
+                        class='absolute top-0 right-2 cursor-pointer line-h-1'>×</button>
+                    <h2 class='font-semibold text-lg'>Replace Order</h2>
+                    <form class="mt-2">
+                        <div class="grid grid-cols-2 gap-y-1">
+                            <label class='col-span-1' for="orderCancelReplaceRequestSymbol">Symbol</label>
+                            <input type="text" id="orderCancelReplaceRequestSymbol" class="col-span-1 form-control" placeholder="Symbol here...">
+
+                            <label class='col-span-1' for="orderCancelReplaceRequestOrigClOrdID">Original Client Order ID</label>
+                            <input type="text"
+                                id="orderCancelReplaceRequestOrigClOrdID"
+                                class="col-span-1 form-control"
+                                placeholder="Original Client Order ID here...">
+
+                            <label class='col-span-1' for="orderCancelReplaceRequestQty">Order Quantity</label>
+                            <input type="text" id="orderCancelReplaceRequestQty"
+                                class="col-span-1 form-control"
+                                placeholder="Integer Quantity here">
+
+                            <label class='col-span-1' for="orderCancelReplaceRequestPx">Price</label>
+                            <input type="text" id="orderCancelReplaceRequestPx"
+                                class="col-span-1 form-control"
+                                placeholder="Decimal Quantity here">
+
+                            <label class='col-span-1' for="orderCancelReplaceRequestClientID">Client ID</label>
+                            <input type="text"
+                                id="orderCancelReplaceRequestClientID"
+                                class="col-span-1 form-control"
+                                placeholder="Client ID here..">
+
+                            <label class='col-span-1' for="orderCancelReplaceRequestSide-select">Side</label>
+                            <select class='col-span-1' name="side"
+                                id="orderCancelReplaceRequestSide-select">
+                                <option value="BUY">Buy</option>
+                                <option value="SELL">Sell</option>
+                            </select>
+
+                            <label class='col-span-1' for="orderCancelReplaceRequestOrd-type-select">Order Type</label>
+                            <select class='col-span-1' name="ordType"
+                                id="orderCancelReplaceRequestOrd-type-select">
+                                <option selected value="LIMIT">Limit</option>
+                                <option value="STOP_LIMIT">Stop Limit</option>
+                            </select>
+
+                            <label class='col-span-1' for="orderCancelReplaceRequestTif-select">Time In Force</label>
+                            <select class='col-span-1' name="tif"
+                                id="orderCancelReplaceRequestTif-select">
+                                <option selected value="GTC">Good 'till Cancel</option>
+                                <option value="IOC">Immediate or Cancel</option>
+                                <option value="FOK">Fill or Kill</option>
+                            </select>
+                        </div>
+                        <div class='flex flex-row mt-2'>
+                            <button id="sendOrderCancelReplaceRequest"
+                                class="btn btn-default ml-auto"
+                                type="button">Send</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="messages-table" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Messages</th>
-                </tr>
-                </thead>
-                <tbody id="messages">
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 </body>
+
 </html>

@@ -14,7 +14,7 @@ quickfixj:
       UseDataDictionary=Y
       TransportDataDictionary=FIXT11.xml
       AppDataDictionary.FIX.5.0SP2=FIX50SP2.modified.xml
-      
+
       SocketUseSSL=N
 
       ResetOnLogon=Y
@@ -32,10 +32,10 @@ quickfixj:
       SLF4JLogOutgoingMessageCategory=${targetCompID}.${senderCompID}.outgoing
       SLF4JLogPrependSessionID=N
       SLF4JLogHeartbeats=Y
-      
+
       ConnectionType=initiator
       ReconnectInterval=5
-      
+
       [session]
       SenderCompID=???
       TargetCompID=???
@@ -43,7 +43,7 @@ quickfixj:
       #SocketConnectHost=localhost
       SocketConnectHost=????
       SocketConnectPort=????
-      
+
       LogonTag=553=${app.session.username}
       LogonTag1=554=${app.session.password}
       TimeZone=Europe/London

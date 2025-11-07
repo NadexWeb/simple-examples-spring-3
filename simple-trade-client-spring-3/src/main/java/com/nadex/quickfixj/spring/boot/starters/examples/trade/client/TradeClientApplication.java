@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import quickfix.Application;
-import quickfix.fix50sp2.MessageCracker;
 
 @SpringBootApplication
 
@@ -21,8 +20,8 @@ public class TradeClientApplication {
 	}
 
 	@Bean
-	public Application clientApplication(ApplicationMessageCracker messageCracker,
-										 NewOrderSingleController newOrderSingleController) {
-		return new ApplicationAdapter(messageCracker, newOrderSingleController);
+	public Application clientApplication(FixMessageCracker messageCracker,
+										 TradeController tradeController) {
+		return new FixApplicationAdapter(messageCracker, tradeController);
 	}
 }

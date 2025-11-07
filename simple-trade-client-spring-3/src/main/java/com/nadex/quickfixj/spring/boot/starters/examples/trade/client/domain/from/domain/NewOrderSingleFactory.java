@@ -1,22 +1,23 @@
-package com.nadex.quickfixj.spring.boot.starters.examples.trade.client;
+package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.domain;
 
-import org.springframework.stereotype.Component;
 import quickfix.field.*;
 import quickfix.fix50sp2.NewOrderSingle;
 
-import java.time.Instant;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.UUID;
 
 public class NewOrderSingleFactory {
-    public static NewOrderSingle fromDomainNewOrderSingle(com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.NewOrderSingle domainNewOrderSingle) {
+    /**
+     * Constructs a FIX New Order Single message the received Domain object
+     * @param domainNewOrderSingle Domain New Order Single
+     * @return FIX New Order Single
+     */
+    public static NewOrderSingle fromDomain(com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.NewOrderSingle domainNewOrderSingle) {
         NewOrderSingle fixNewOrderSingle =  new NewOrderSingle();
-
         fixNewOrderSingle.set(new Symbol(domainNewOrderSingle.getSymbol()));
-        fixNewOrderSingle.set(new ClOrdID(UUID.randomUUID().toString()));
-        fixNewOrderSingle.set(new OrderQty(Double.parseDouble(domainNewOrderSingle.getQty())));
-        fixNewOrderSingle.set(new Price(Double.parseDouble(domainNewOrderSingle.getPx())));
+        fixNewOrderSingle.set(new OrderQty(new BigDecimal(domainNewOrderSingle.getQty())));
+        fixNewOrderSingle.set(new Price(new BigDecimal(domainNewOrderSingle.getPx())));
                 // Add the Party Group
         NewOrderSingle.NoPartyIDs partyIDGroup = new NewOrderSingle.NoPartyIDs();
         partyIDGroup.set(new PartyID(domainNewOrderSingle.getClientID()));
@@ -51,6 +52,8 @@ public class NewOrderSingleFactory {
                 fixNewOrderSingle.set(new OrdType(OrdType.STOP_LIMIT));
                 break;
         }
+        //generated here
+        fixNewOrderSingle.set(new ClOrdID(UUID.randomUUID().toString()));
         fixNewOrderSingle.set(new TransactTime(LocalDateTime.now()));
         return fixNewOrderSingle;
     }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Order Entry Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link href="/main.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script src="/app.js"></script>
+</head>
+
+<body>
+    <noscript>
+        <h2 style="color: #ff0000">Seems your browser doesn't support
+            Javascript! Websocket relies on Javascript being
+            enabled. Please enable
+            Javascript and reload this page!</h2>
+    </noscript>
+    <div id="main-content">
+          <div class="flex space-x-4">
+                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-cancel" type="submit" disabled>Disconnect</button>
+                    <p>WebSocket Status:
+                        <span class='text-red-500' id='socket-status'>Disconnected</span>
+                    </p>
+                </div>
+            <div class="col-span-8 flex flex-col">
+                 <div
+                    class='mt-4 h-[700px] border border-gray-300 p-2 overflow-auto'>
+                    <h2 class='text-lg font-semibold'>Market Data
+                        <span id='number-of-markets'></span>
+                    </h2>
+                    <table class="mt-2 table table-auto w-full">
+                        <thead class='bg-gray-200'>
+                            <tr class='divide-x divide-gray-300'>
+                                <th class='text-center text-xs px-1 font-semibold'>Symbol</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Best Bid Price</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Best Bid Size</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Best Offer Price</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Best Offer Size</th>
+                                <th class='text-center text-xs px-1 font-semibold'>Market Depth</th>
+                            </tr>
+                        </thead>
+                        <tbody id="market-list-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

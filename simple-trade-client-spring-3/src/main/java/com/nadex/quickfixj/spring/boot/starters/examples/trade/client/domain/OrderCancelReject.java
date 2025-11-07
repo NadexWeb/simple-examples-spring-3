@@ -1,0 +1,13 @@
+package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain;
+
+import lombok.Data;
+
+@Data
+public class OrderCancelReject extends Message {
+    private String orderID;
+    private String clientOrderID;
+    private String ordStatus;
+    private String cxlRejResponseTo;
+    private String cxlRejReason;
+    private String text;
+}
