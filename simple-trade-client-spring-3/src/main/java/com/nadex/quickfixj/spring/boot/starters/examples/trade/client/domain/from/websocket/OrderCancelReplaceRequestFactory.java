@@ -1,4 +1,4 @@
-package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.domain;
+package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.websocket;
 
 import quickfix.field.*;
 import quickfix.fix50sp2.OrderCancelReplaceRequest;
@@ -17,8 +17,8 @@ public class OrderCancelReplaceRequestFactory {
         partyIDGroup.set(new PartyRole(PartyRole.CLIENT_ID));
         orderCancelReplaceRequest.addGroup(partyIDGroup);
         orderCancelReplaceRequest.set(new Symbol(domainOrderCancelReplaceRequest.getSymbol()));
-        orderCancelReplaceRequest.set(new OrderQty(new BigDecimal(domainOrderCancelReplaceRequest.getQty())));
-        orderCancelReplaceRequest.set(new Price(new BigDecimal(domainOrderCancelReplaceRequest.getPx())));
+        orderCancelReplaceRequest.set(new OrderQty(domainOrderCancelReplaceRequest.getQty()));
+        orderCancelReplaceRequest.set(new Price(domainOrderCancelReplaceRequest.getPrice()));
         // map the received message values
         switch (domainOrderCancelReplaceRequest.getSide()) {
             case "BUY":

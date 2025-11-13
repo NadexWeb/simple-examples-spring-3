@@ -25,10 +25,10 @@ public class ExecutionReportFactory {
             domainExecutionReport.setExecID(executionReport.getExecID().getValue());
         }
         if (executionReport.isSetSide()) {
-            domainExecutionReport.setSide(String.valueOf(executionReport.getSide().getValue()));
+            domainExecutionReport.setSide(executionReport.getSide().getValue());
         }
         if (executionReport.isSetPrice()) {
-            domainExecutionReport.setPrice(executionReport.getPrice().getValue().toString());
+            domainExecutionReport.setPrice(executionReport.getPrice().getValue());
         }
         if (executionReport.isSetClOrdID()) {
             domainExecutionReport.setClientOrderID(executionReport.getClOrdID().getValue());
@@ -37,34 +37,34 @@ public class ExecutionReportFactory {
             domainExecutionReport.setOriginalClientOrderID(executionReport.getOrigClOrdID().getValue());
         }
         if (executionReport.isSetTimeInForce()) {
-            domainExecutionReport.setTimeInForce(String.valueOf(executionReport.getTimeInForce().getValue()));
+            domainExecutionReport.setTimeInForce(executionReport.getTimeInForce().getValue());
         }
         if (executionReport.isSetCumQty()) {
-            domainExecutionReport.setCumQty(executionReport.getCumQty().getValue().toString());
+            domainExecutionReport.setCumQty(executionReport.getCumQty().getValue());
         }
         if (executionReport.isSetOrderQty()) {
-            domainExecutionReport.setOrderQty(executionReport.getOrderQty().getValue().toString());
+            domainExecutionReport.setOrderQty(executionReport.getOrderQty().getValue());
         }
         if (executionReport.isSetLastQty()) {
-            domainExecutionReport.setLastQty(executionReport.getLastQty().getValue().toString());
+            domainExecutionReport.setLastQty(executionReport.getLastQty().getValue());
         }
         if (executionReport.isSetLeavesQty()) {
-            domainExecutionReport.setLeavesQty(executionReport.getLeavesQty().getValue().toString());
+            domainExecutionReport.setLeavesQty(executionReport.getLeavesQty().getValue());
         }
         if (executionReport.isSetAvgPx()) {
-            domainExecutionReport.setAvgPx(executionReport.getAvgPx().getValue().toString());
+            domainExecutionReport.setAvgPx(executionReport.getAvgPx().getValue());
         }
         if (executionReport.isSetLastPx()) {
-            domainExecutionReport.setLastPx(executionReport.getLastPx().getValue().toString());
+            domainExecutionReport.setLastPx(executionReport.getLastPx().getValue());
         }
         if (executionReport.isSetTransactTime()) {
             domainExecutionReport.setTransactTime(executionReport.getTransactTime().getValue().toString());
         }
         if (executionReport.isSetExecType()) {
-            domainExecutionReport.setExecType(String.valueOf(executionReport.getExecType().getValue()));
+            domainExecutionReport.setExecType(executionReport.getExecType().getValue());
         }
         if (executionReport.isSetOrdStatus()) {
-            domainExecutionReport.setOrdStatus(String.valueOf(executionReport.getOrdStatus().getValue()));
+            domainExecutionReport.setOrdStatus(executionReport.getOrdStatus().getValue());
         }
         if (executionReport.isSetTradeDate()) {
             domainExecutionReport.setTradeDate(executionReport.getTradeDate().getValue());

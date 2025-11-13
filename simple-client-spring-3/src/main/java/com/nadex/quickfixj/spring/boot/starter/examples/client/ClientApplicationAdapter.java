@@ -15,6 +15,7 @@
  */
 package com.nadex.quickfixj.spring.boot.starter.examples.client;
 
+import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.SecurityListRequestFactory;
 import com.nadex.quickfixj.spring.boot.starter.examples.client.filter.FilterProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

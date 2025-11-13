@@ -6,8 +6,8 @@ import lombok.Data;
 public class OrderCancelReject extends Message {
     private String orderID;
     private String clientOrderID;
-    private String ordStatus;
-    private String cxlRejResponseTo;
-    private String cxlRejReason;
+    private Character ordStatus;
+    private Character cxlRejResponseTo;
+    private Integer cxlRejReason;
     private String text;
 }

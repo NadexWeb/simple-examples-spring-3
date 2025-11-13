@@ -16,7 +16,7 @@ public class BusinessMessageRejectFactory {
                 new com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.BusinessMessageReject();
         domainBusinessMessageReject.setMsgType(businessMessageReject.getHeader().getString(MsgType.FIELD));
         if (businessMessageReject.isSetRefSeqNum()) {
-            domainBusinessMessageReject.setRefSeqNum(businessMessageReject.getRefSeqNum().toString());
+            domainBusinessMessageReject.setRefSeqNum(businessMessageReject.getRefSeqNum().getValue());
         }
         if (businessMessageReject.isSetRefMsgType()) {
             domainBusinessMessageReject.setRefMsgType(businessMessageReject.getRefMsgType().getValue());

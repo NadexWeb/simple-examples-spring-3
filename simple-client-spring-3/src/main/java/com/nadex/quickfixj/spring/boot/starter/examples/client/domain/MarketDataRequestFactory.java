@@ -1,6 +1,5 @@
-package com.nadex.quickfixj.spring.boot.starter.examples.client;
+package com.nadex.quickfixj.spring.boot.starter.examples.client.domain;
 
-import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.Instrument;
 import quickfix.field.*;
 import quickfix.fix50sp2.MarketDataRequest;
 

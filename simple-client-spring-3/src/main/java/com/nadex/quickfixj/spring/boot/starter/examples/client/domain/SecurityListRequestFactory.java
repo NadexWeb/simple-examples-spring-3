@@ -1,4 +1,4 @@
-package com.nadex.quickfixj.spring.boot.starter.examples.client;
+package com.nadex.quickfixj.spring.boot.starter.examples.client.domain;
 
 import com.nadex.quickfixj.spring.boot.starter.examples.client.filter.FilterProperties;
 import quickfix.field.Product;

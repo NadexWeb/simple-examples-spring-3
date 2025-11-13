@@ -21,13 +21,13 @@ public class OrderCancelRejectFactory {
             domainOrderCancelReject.setClientOrderID(orderCancelReject.getClOrdID().getValue());
         }
         if (orderCancelReject.isSetOrdStatus()) {
-            domainOrderCancelReject.setOrdStatus(orderCancelReject.getOrdStatus().toString());
+            domainOrderCancelReject.setOrdStatus(orderCancelReject.getOrdStatus().getValue());
         }
         if (orderCancelReject.isSetCxlRejResponseTo()) {
-            domainOrderCancelReject.setCxlRejResponseTo(orderCancelReject.getCxlRejResponseTo().toString());
+            domainOrderCancelReject.setCxlRejResponseTo(orderCancelReject.getCxlRejResponseTo().getValue());
         }
         if (orderCancelReject.isSetCxlRejReason()) {
-            domainOrderCancelReject.setCxlRejReason(orderCancelReject.getCxlRejReason().toString());
+            domainOrderCancelReject.setCxlRejReason(orderCancelReject.getCxlRejReason().getValue());
         }
         if (orderCancelReject.isSetText()) {
             domainOrderCancelReject.setText(orderCancelReject.getText().toString());

@@ -1,4 +1,4 @@
-package com.nadex.quickfixj.spring.boot.starter.examples.client;
+package com.nadex.quickfixj.spring.boot.starter.examples.client.domain;
 
 import quickfix.Message;
 import quickfix.field.SecurityStatusReqID;

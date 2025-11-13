@@ -1,4 +1,4 @@
-package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.domain;
+package com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.from.websocket;
 
 import quickfix.field.*;
 import quickfix.fix50sp2.NewOrderSingle;
@@ -16,8 +16,8 @@ public class NewOrderSingleFactory {
     public static NewOrderSingle fromDomain(com.nadex.quickfixj.spring.boot.starters.examples.trade.client.domain.NewOrderSingle domainNewOrderSingle) {
         NewOrderSingle fixNewOrderSingle =  new NewOrderSingle();
         fixNewOrderSingle.set(new Symbol(domainNewOrderSingle.getSymbol()));
-        fixNewOrderSingle.set(new OrderQty(new BigDecimal(domainNewOrderSingle.getQty())));
-        fixNewOrderSingle.set(new Price(new BigDecimal(domainNewOrderSingle.getPx())));
+        fixNewOrderSingle.set(new OrderQty(domainNewOrderSingle.getQty()));
+        fixNewOrderSingle.set(new Price(domainNewOrderSingle.getPx()));
                 // Add the Party Group
         NewOrderSingle.NoPartyIDs partyIDGroup = new NewOrderSingle.NoPartyIDs();
         partyIDGroup.set(new PartyID(domainNewOrderSingle.getClientID()));

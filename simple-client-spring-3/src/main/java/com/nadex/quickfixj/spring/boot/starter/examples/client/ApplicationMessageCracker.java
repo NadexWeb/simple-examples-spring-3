@@ -17,13 +17,12 @@ package com.nadex.quickfixj.spring.boot.starter.examples.client;
 
 import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.InstrumentFactory;
 import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.Instrument;
+import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.MarketDataRequestFactory;
 import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.MarketDataSnapshot;
 import com.nadex.quickfixj.spring.boot.starter.examples.client.domain.from.fix.MarketDataSnapshotFactory;
 import com.nadex.quickfixj.spring.boot.starter.examples.client.filter.FilterProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.core.MessageSendingOperations;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import quickfix.FieldNotFound;
 import quickfix.IncorrectTagValue;

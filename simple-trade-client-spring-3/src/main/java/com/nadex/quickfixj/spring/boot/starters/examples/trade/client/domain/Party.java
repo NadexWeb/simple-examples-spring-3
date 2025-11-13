@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class Party {
     private String partyID;
-    private char partyIDSource;
-    private int partyRole;
+    private Character partyIDSource;
+    private Integer partyRole;
 }

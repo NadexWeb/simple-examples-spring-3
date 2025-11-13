@@ -69,5 +69,12 @@ public class FixMessageCracker extends MessageCracker {
         this.messageSendingOperations.convertAndSend(PATH, BusinessMessageRejectFactory.fromFix(businessMessageReject));
     }
 
+    @Override
+    public void onMessage(quickfix.fix50sp2.PositionReport  positionReport, SessionID sessionID)
+            throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
+        log.info("PositionReport received: {}", positionReport);
+        this.messageSendingOperations.convertAndSend(PATH, PositionReportFactory.fromFix(positionReport));
+    }
+
 }
 

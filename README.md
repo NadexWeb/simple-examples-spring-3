@@ -40,16 +40,33 @@ add `--spring.config.location=<path to Spring configuraion>` to the command, for
 `java -jar target/simple-client-spring-3.jar --spring.config.location=../../application.yml`
 
 ### Example Server
+This is a very incomplete example of a Pre Trade FIX gateway that returns a Security List  
+
 `cd simple-server-spring-3 && java -jar target/simple-server-spring-3.jar` or 
 
 `cd simple-server-spring-3 && mvn spring-boot:run`
 
 ### Example Client
+This is an example of a PreTrade client application. 
+It demonstrates :
+* SecurityListRequest
+* SecurityStatus
+* TradingSessionStatus
+* MarketDataRequest
+* MarketDataSnapshot
+* MarketDataIncrementalRefresh
+
 `cd simple-client-spring-3 && java -jar target/simple-client-spring-3.jar` or 
 
 `cd simple-client-spring-3 && mvn spring-boot:run`
 
 ### Example Trade Client
+This is an example of a Trade client application. It demonstrates:
+* NewOrderSingle
+* OrderCancelReplaceRequest
+* OrderCancelRequest
+* PositionReport
+
 `cd simple-trade-client-spring-3 && java -jar target/simple-trade-client-spring-3-spring-3.jar` or
 
 `cd simple-trade-client-spring-3 && mvn spring-boot:run`

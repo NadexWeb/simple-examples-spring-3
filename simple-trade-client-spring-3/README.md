@@ -9,8 +9,6 @@ Behind the scenes it connects to Nadex and sends messages using the FIX protocol
 
 The front end is implemented with WebSocket and STOMP.
 
-It does not support updating or cancelling orders.
-
 ## Run the example
 
 ### Specify custom Spring configuration file location
@@ -46,3 +44,49 @@ The application will create a FIX message and send it to the CDNA Trade FIX Gate
 When a response is received from the CDNA Trade FIX Gateway, it should be presented on the page.\
 Also check the Trade Example Client logs.
 If messages are rejected at the session level (35=3) this will only appear in the logs.
+
+## About the code
+
+The code is for example purposes only. This is not intended to be production quality code.
+It does not represent all the trading functionality available via FIX. 
+
+### Conventions
+
+The objects that are received and sent on the WebSocket are in the "domain" package. 
+These correspond to object defined by the FIX Protocol. 
+The datatypes of fields correspond to those defined by the FIX Protocol. 
+
+The objects received on the WebSocket endpoints are translated to FIX Protocol Messages \
+and relayed to the exchange FIX Gateways.
+
+Relevant application level messages received over FIX Protocol are translated to \ 
+Plain Old Java (Data Transfer) Objects and relayed via WebSocket.  
+
+### The project structure
+
+<pre>
+├── src
+│     └── main
+│         ├── java
+│         │     └── com
+│         │         └── nadex
+│         │             └── quickfixj
+│         │                 └── spring
+│         │                     └── boot
+│         │                         └── starters
+│         │                             └── examples
+│         │                                 └── trade
+│         │                                     └── client
+│         │                                         ├──[WebSocket and FIX Protocol handling, Spring Config]
+│         │                                         └── domain
+│         │                                             ├── [Plain Old Java Data Transfer Objects]
+│         │                                             └── from
+│         │                                                 ├── fix
+│         │                                                 │   └──[Translation from FIX to WebSocket]
+│         │                                                 └── websocket
+│         │                                                     └──[Translation from WebSocket to FIX ]
+│         └── resources
+│             ├── application.yml [the application configuration]
+│             └── static 
+|                 └──[Contains the static web resources]
+</pre>

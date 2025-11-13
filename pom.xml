@@ -13,6 +13,7 @@
 
 	<modules>
 		<module>simple-client-spring-3</module>
+		<module>simple-trade-client-spring-3</module>
 		<module>simple-server-spring-3</module>
 	</modules>
 
@@ -161,29 +162,29 @@
 				</configuration>
 			</plugin>
 -->
-			<plugin>
-				<!-- run "echo" to generate
-					diagrams in target, graphviz must be installed -->
-				<groupId>com.github.davidmoten</groupId>
-				<artifactId>plantuml-maven-plugin</artifactId>
-				<version>${plantuml-mvn-plugin.version}</version>
-				<configuration>
-					<sourceFiles>
-						<directory>${project.basedir}</directory>
-						<includes>
-							<include>**/*.puml</include>
-						</includes>
-					</sourceFiles>
-					<outputInSourceDirectory>true</outputInSourceDirectory>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>net.sourceforge.plantuml</groupId>
-						<artifactId>plantuml</artifactId>
-						<version>${plantuml.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
+<!--			<plugin>-->
+<!--				&lt;!&ndash; run "echo" to generate-->
+<!--					diagrams in target, graphviz must be installed &ndash;&gt;-->
+<!--				<groupId>com.github.davidmoten</groupId>-->
+<!--				<artifactId>plantuml-maven-plugin</artifactId>-->
+<!--				<version>${plantuml-mvn-plugin.version}</version>-->
+<!--				<configuration>-->
+<!--					<sourceFiles>-->
+<!--						<directory>${project.basedir}</directory>-->
+<!--						<includes>-->
+<!--							<include>**/*.puml</include>-->
+<!--						</includes>-->
+<!--					</sourceFiles>-->
+<!--					<outputInSourceDirectory>true</outputInSourceDirectory>-->
+<!--				</configuration>-->
+<!--				<dependencies>-->
+<!--					<dependency>-->
+<!--						<groupId>net.sourceforge.plantuml</groupId>-->
+<!--						<artifactId>plantuml</artifactId>-->
+<!--						<version>${plantuml.version}</version>-->
+<!--					</dependency>-->
+<!--				</dependencies>-->
+<!--			</plugin>-->
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -246,7 +247,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.2.1</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>

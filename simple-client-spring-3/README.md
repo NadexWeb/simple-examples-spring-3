@@ -1,5 +1,8 @@
 # Example Market Data Client
+
 Connects to FIX for market data and publishes it over websocket to a simple html UI.
+The code is for example purposes only. This is not intended to be production quality code.
+It does not represent all the trading functionality available via FIX.
 
 ## Configuration
 Filter the markets you subscribe to by modifying filters in application.yml
