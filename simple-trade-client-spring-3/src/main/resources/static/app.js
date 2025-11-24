@@ -82,7 +82,6 @@ class OrderEntryWebsocketManager {
         // Order Filled
       } else if (message.ordStatus === '2') {
         window.workingOrdersManager.orderFilled(message);
-        window.positionsManager.handlePositionFill(message);
       } else if (message.ordStatus === '1') {
         window.workingOrdersManager.partialFill(message); // TODO:
       }
@@ -90,7 +89,25 @@ class OrderEntryWebsocketManager {
   }
 
   _handlePositionReport(message) {
-    console.log('HANDLING POSITION: ', JSON.stringify(message));
+    const { symbol, positionQtys, settlPrice } = message;
+
+    if (positionQtys.length === 1) {
+      const { longQty, shortQty, posQtyStatus } = positionQtys[0];
+
+      if (posQtyStatus === 1) {
+        const netPosition = shortQty + longQty;
+
+        window.positionsManager.handlePositionUpdate(
+          symbol,
+          settlPrice,
+          netPosition
+        );
+      } else {
+        console.error('Position was not accepted.');
+      }
+    } else {
+      console.error(`Position Report has ${positionQtys.length} positions. This scenario has not been implemented`);
+    }
   }
 }
 
@@ -243,41 +260,14 @@ class WorkingOrdersTableController {
 class PositionsManager {
   positions = {};
 
-  handlePositionFill(positionFillMessage) {
-    const { symbol, side, lastPx, lastQty, transactTime } = positionFillMessage;
-    const existingPosition = this.positions[symbol];
-
-    if (existingPosition) {
-      let newPositionQty;
-
-      if (side === '1') {
-        newPositionQty = parseInt(lastQty);
-      } else if (side === '2') {
-        newPositionQty = -parseInt(lastQty);
-      }
-
-      // get new position average price, based on:
-      // existing price and size
-      // and newly filled order price and size
-      existingPosition.averagePrice = getAveragePrice(
-        existingPosition.averagePrice,
-        existingPosition.quantity,
-        parseFloat(lastPx),
-        newPositionQty
-      );
-      existingPosition.quantity += newPositionQty;
-      existingPosition.lastUpdated = new Date(transactTime);
-
-      window.positionsTableController.replaceRow(symbol, existingPosition);
-    } else {
-      this.positions[symbol] = {
-        symbol,
-        averagePrice: parseFloat(lastPx),
-        quantity: side === '1' ? parseInt(lastQty) : -parseInt(lastQty),
-        lastUpdated: new Date(),
-      };
-      window.positionsTableController.addRow(this.positions[symbol]);
-    }
+  handlePositionUpdate(symbol, averagePrice, quantity) {
+    this.positions[symbol] = {
+      symbol,
+      averagePrice,
+      quantity,
+      lastUpdated: new Date(),
+    };
+    window.positionsTableController.addRow(this.positions[symbol]);
   }
 }
 
