@@ -32,10 +32,10 @@ quickfixj:
       SLF4JLogOutgoingMessageCategory=${targetCompID}.${senderCompID}.outgoing
       SLF4JLogPrependSessionID=N
       SLF4JLogHeartbeats=Y
-
+      
       ConnectionType=initiator
       ReconnectInterval=5
-
+      
       [session]
       SenderCompID=????
       TargetCompID=????
@@ -48,7 +48,7 @@ quickfixj:
       EndTime=23:55:00
 
 server:
-  port: 8080
+  port: 8081
 
 app:
   session:

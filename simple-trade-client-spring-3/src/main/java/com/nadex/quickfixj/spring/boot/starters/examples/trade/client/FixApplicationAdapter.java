@@ -15,6 +15,8 @@
  */
 package com.nadex.quickfixj.spring.boot.starters.examples.trade.client;
 
+import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.properties.FixSessionProperties;
+import com.nadex.spring.boot.starters.examples.common.LogonMessageDecorator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import quickfix.Application;
@@ -23,6 +25,7 @@ import quickfix.IncorrectTagValue;
 import quickfix.Message;
 import quickfix.SessionID;
 import quickfix.UnsupportedMessageType;
+import quickfix.field.MsgType;
 
 /**
  * ApplicationAdapter implements the QuickFIX/J Application to provide an implementation of callbacks
@@ -34,10 +37,12 @@ public class FixApplicationAdapter implements Application {
 
     private final FixMessageCracker messageCracker;
     private final TradeController tradeController;
+    private final FixSessionProperties fixSessionProperties;
 
-    public FixApplicationAdapter(FixMessageCracker messageCracker, TradeController tradeController) {
+    public FixApplicationAdapter(FixMessageCracker messageCracker, TradeController tradeController, FixSessionProperties fixSessionProperties) {
         this.messageCracker = messageCracker;
         this.tradeController = tradeController;
+        this.fixSessionProperties = fixSessionProperties;
     }
 
     @Override
@@ -76,7 +81,19 @@ public class FixApplicationAdapter implements Application {
 
     @Override
     public void toAdmin(Message message, SessionID sessionId) {
-        log.info("toAdmin: Message={}, SessionId={}", message, sessionId);
+        log.info("toAdmin: received Message={}, SessionId={}", message, sessionId);
+        try {
+            MsgType msgType = new MsgType();
+            if (message.getHeader().getField(msgType).getValue().equals("A")) {
+                LogonMessageDecorator.decorate(message,
+                        fixSessionProperties.getApikey(),
+                        fixSessionProperties.getSecret());
+                log.info("toAdmin: Logon message updated, Message={}, SessionId={}", message, sessionId);
+            }
+        } catch (Exception e) {
+            log.error("toAdmin: Abnormal termination due to {}", e.getMessage(), e);
+            System.exit(1);
+        }
     }
 
     @Override

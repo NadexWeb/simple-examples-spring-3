@@ -12,9 +12,9 @@
 	<url>https://github.com/NadexWeb/simple-examples-spring-3</url>
 
 	<modules>
-		<module>simple-client-spring-3</module>
+		<module>common</module>
+		<module>simple-pre-trade-client-spring-3</module>
 		<module>simple-trade-client-spring-3</module>
-		<module>simple-server-spring-3</module>
 	</modules>
 
 	<licenses>
@@ -70,6 +70,12 @@
 				<groupId>org.yaml</groupId>
 				<artifactId>snakeyaml</artifactId>
 				<version>2.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.15</version>
 			</dependency>
 
 			<dependency>
@@ -132,59 +138,17 @@
 				<artifactId>lombok</artifactId>
 				<version>1.18.30</version>
 			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-engine</artifactId>
+				<version>5.11.0-M2</version>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>4.0.0-M2</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-<!--
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.13</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
--->
-<!--			<plugin>-->
-<!--				&lt;!&ndash; run "echo" to generate-->
-<!--					diagrams in target, graphviz must be installed &ndash;&gt;-->
-<!--				<groupId>com.github.davidmoten</groupId>-->
-<!--				<artifactId>plantuml-maven-plugin</artifactId>-->
-<!--				<version>${plantuml-mvn-plugin.version}</version>-->
-<!--				<configuration>-->
-<!--					<sourceFiles>-->
-<!--						<directory>${project.basedir}</directory>-->
-<!--						<includes>-->
-<!--							<include>**/*.puml</include>-->
-<!--						</includes>-->
-<!--					</sourceFiles>-->
-<!--					<outputInSourceDirectory>true</outputInSourceDirectory>-->
-<!--				</configuration>-->
-<!--				<dependencies>-->
-<!--					<dependency>-->
-<!--						<groupId>net.sourceforge.plantuml</groupId>-->
-<!--						<artifactId>plantuml</artifactId>-->
-<!--						<version>${plantuml.version}</version>-->
-<!--					</dependency>-->
-<!--				</dependencies>-->
-<!--			</plugin>-->
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -208,6 +172,18 @@
 						<goals>deploy</goals>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>4.0.0-M2</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>repackage</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -228,22 +204,6 @@
 			<id>release</id>
 			<build>
 				<plugins>
-<!--
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.0.1</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
--->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>

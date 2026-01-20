@@ -1,5 +1,6 @@
 package com.nadex.quickfixj.spring.boot.starters.examples.trade.client;
 
+import com.nadex.quickfixj.spring.boot.starters.examples.trade.client.properties.FixSessionProperties;
 import io.allune.quickfixj.spring.boot.starter.EnableQuickFixJClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -21,7 +22,8 @@ public class TradeClientApplication {
 
 	@Bean
 	public Application clientApplication(FixMessageCracker messageCracker,
-										 TradeController tradeController) {
-		return new FixApplicationAdapter(messageCracker, tradeController);
+										 TradeController tradeController,
+										 FixSessionProperties fixSessionProperties) {
+		return new FixApplicationAdapter(messageCracker, tradeController, fixSessionProperties);
 	}
 }
