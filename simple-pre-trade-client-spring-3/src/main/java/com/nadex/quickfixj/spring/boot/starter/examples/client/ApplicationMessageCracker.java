@@ -147,8 +147,16 @@ public class ApplicationMessageCracker extends MessageCracker {
     @Override
     public void onMessage(MarketDataIncrementalRefresh marketDataIncrementalRefresh, SessionID sessionID)
             throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
-        log.info("Received Market Data Snapshot Incremental Refresh, Symbol:{}, number of MDEntries {}",
-                marketDataIncrementalRefresh.getSymbol().getValue(), marketDataIncrementalRefresh.getNoMDEntries().getValue());
+        log.info("Received Market Data Incremental Refresh");
+        int noMDEntries = marketDataIncrementalRefresh.getNoMDEntries().getValue();
+        if (noMDEntries > 0) {
+            log.info("number of MDEntries: {}", noMDEntries);
+            for (int i = 1; i < noMDEntries +1; i++) {
+                MarketDataIncrementalRefresh.NoMDEntries mDEntriesGroup = new MarketDataIncrementalRefresh.NoMDEntries();
+                marketDataIncrementalRefresh.getGroup(i, mDEntriesGroup);
+                log.info("Market Date Entry number {}, Symbol:{}", i, mDEntriesGroup.getSymbol().getValue());
+            }
+        }
     }
 
     /**
