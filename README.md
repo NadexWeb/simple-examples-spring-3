@@ -9,8 +9,7 @@ The intention was to alter the original example code only a little so that it ca
 
 The dependencies on the "official" [QuickFIX/J](https://github.com/quickfix-j/quickfixj) distribution are replaced by a [custom build](https://github.com/NadexWeb/quickfixj-fce) of QuickFIX/J.
 
-Using the custom build for production purposes is optional. To see how to use the original [QuickFIX/J](https://github.com/quickfix-j/quickfixj), 
-please refer to the [original examples](https://github.com/esanchezros/quickfixj-spring-boot-starter-examples).
+Using the custom build for production purposes is optional but provides type-safe generated code. 
 
 The examples include an example client and an example server so that you don't need to be able to connect to CDNA systems to run the client.
 
@@ -20,11 +19,11 @@ The examples include an example client and an example server so that you don't n
 
 A [Java Development Kit](https://openjdk.org/projects/jdk/) and the [Apache Maven](https://maven.apache.org/) build tool are required. Consider using [sdkman](https://sdkman.io/) to install and manage local development environments. [[ref](https://medium.com/@brunoborges/manage-multiple-jdks-on-mac-os-linux-and-windows-wsl2-3a73467b685c)]
 
-This project depends on the [custom build](https://github.com/NadexWeb/quickfixj-fce) of QuickFIX/J. 
-You will need to check out [branch 3.6.0](https://github.com/NadexWeb/quickfixj-fce/tree/3.6.0) of the project and build it as described in [readme-nadex.md](https://github.com/NadexWeb/quickfixj-fce/blob/3.6.0/readme-nadex.md).
+This project depends on the [custom build](https://github.com/NadexWeb/cdna-quickfixj-customization) of a QuickFIX/J application
+message package. 
+You will need to check out the project and build it as described in [readme-nadex.md](https://github.com/NadexWeb/quickfixj-fce/blob/3.6.0/readme-nadex.md).
 
-This will install the SNAPSHOT version of the project your local maven repository. We cannot yet publish the artefact to Maven Central so this step is necessary. 
-It takes some time to build the QuickFIX/J project.
+This will install the SNAPSHOT version of the project your local maven repository. We cannot yet publish the artifact to Maven Central so this step is necessary.
 
 ## Build this project
 

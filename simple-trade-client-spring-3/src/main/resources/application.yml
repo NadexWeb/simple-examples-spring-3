@@ -35,13 +35,13 @@ quickfixj:
 
       ConnectionType=initiator
       ReconnectInterval=5
-
+   
       [session]
-      SenderCompID=????
-      TargetCompID=????
+      SenderCompID=DMO4.TSP.16.UD
+      TargetCompID=DMO4.CDNA.UD
 
-      SocketConnectHost=????
-      SocketConnectPort=????
+      SocketConnectHost=nadexdev-cp7g4rhzf6zou76p3zvg-1.demo-clients.nadex.com
+      SocketConnectPort=9000
       
       TimeZone=Europe/London
       StartTime=24:00:00
@@ -52,8 +52,8 @@ server:
 
 app:
   session:
-    apikey: ????
-    secret: ????
+    apikey: JB1DRP5UzEFsNxGyHrvCgd
+    secret: vGJE1-XsZ2d-dHJChEGLcvePeRVRKnITt2mkAfbO9SN
   filter:
     # filters are additive
     # instruments not matching all the specified filter criteria are omitted

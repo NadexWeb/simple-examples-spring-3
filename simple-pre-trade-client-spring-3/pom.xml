@@ -29,7 +29,7 @@
 			<artifactId>quickfixj-messages-fix50sp2</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.nadex.fce</groupId>
+			<groupId>org.quickfixj</groupId>
 			<artifactId>quickfixj-core</artifactId>
 		</dependency>
 		<dependency>

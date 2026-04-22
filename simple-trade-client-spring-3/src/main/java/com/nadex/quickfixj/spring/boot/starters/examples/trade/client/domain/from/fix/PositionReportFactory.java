@@ -12,7 +12,7 @@ import java.util.List;
 public class PositionReportFactory {
     public static PositionReport fromFix(quickfix.fix50sp2.PositionReport positionReport) throws FieldNotFound {
         PositionReport domainPositionReport = new PositionReport();
-        domainPositionReport.setMsgType(MsgType.POSITION_REPORT);
+        domainPositionReport.setMsgType(MsgType.POSITIONREPORT);
         if (positionReport.isSetPosMaintRptID()) {
             domainPositionReport.setPosMaintRptID(positionReport.getPosMaintRptID().getValue());
         }
@@ -90,7 +90,7 @@ public class PositionReportFactory {
     public static PositionReport cheekyLittleTestReport() {
         PositionReport positionReport = new PositionReport();
 
-        positionReport.setMsgType(MsgType.POSITION_REPORT);
+        positionReport.setMsgType(MsgType.POSITIONREPORT);
         positionReport.setPosMaintRptID("ABCD");
         positionReport.setPosReqID("12");
         positionReport.setPosReqType(99);

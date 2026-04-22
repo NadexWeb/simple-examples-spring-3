@@ -37,7 +37,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>21</java.version>
 		<quickfixj-spring-boot-starter.version>2.17.2-SNAPSHOT</quickfixj-spring-boot-starter.version>
-		<cdna-qfj.version>3.6.0-SNAPSHOT</cdna-qfj.version>
+		<cdna-application-messages.version>3.6.1-SNAPSHOT</cdna-application-messages.version>
+		<quickfixj.version>3.0.0</quickfixj.version>
 		<quickfixj-spring-boot.version>2.17.1</quickfixj-spring-boot.version>
 		<plantuml-maven-plugin.version>1.2</plantuml-maven-plugin.version>
 		<plantuml.version>7954</plantuml.version>
@@ -57,12 +58,12 @@
 			<dependency>
 				<groupId>com.nadex.fce</groupId>
 				<artifactId>quickfixj-messages-fix50sp2</artifactId>
-				<version>${cdna-qfj.version}</version>
+				<version>${cdna-application-messages.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.nadex.fce</groupId>
+				<groupId>org.quickfixj</groupId>
 				<artifactId>quickfixj-core</artifactId>
-				<version>${cdna-qfj.version}</version>
+				<version>${quickfixj.version}</version>
 			</dependency>
 			<!-- Spring Boot -->
 
