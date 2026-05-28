@@ -17,10 +17,6 @@ public class FilterProperties {
 
     @Getter
     @Setter
-    private List<String> products;
-
-    @Getter
-    @Setter
     private List<String> securitySubTypes;
 
     @Getter

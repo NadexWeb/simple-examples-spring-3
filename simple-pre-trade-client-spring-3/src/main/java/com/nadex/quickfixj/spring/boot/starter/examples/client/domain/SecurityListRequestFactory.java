@@ -14,13 +14,7 @@ public class SecurityListRequestFactory {
     public static SecurityListRequest securityListRequest(FilterProperties filterProperties) {
         SecurityListRequest securityListRequest = new SecurityListRequest();
         securityListRequest.set(new SecurityReqID(UUID.randomUUID().toString()));
-        List<String> products = filterProperties.getProducts();
-        if (products.isEmpty()) {
-            securityListRequest.set(new SecurityListRequestType(SecurityListRequestType.ALL_SECURITIES));
-        } else {
-            securityListRequest.set(new SecurityListRequestType(SecurityListRequestType.PRODUCT));
-            securityListRequest.set(new Product(Integer.parseInt(products.getFirst())));
-        }
+        securityListRequest.set(new SecurityListRequestType(SecurityListRequestType.ALL_SECURITIES));
         securityListRequest.set(new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT));
         return securityListRequest;
     }

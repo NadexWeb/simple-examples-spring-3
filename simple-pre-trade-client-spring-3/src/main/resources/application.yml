@@ -59,8 +59,6 @@ app:
     # instruments not matching all the specified filter criteria are omitted
     # filter criteria may be left blank
     underlyingSymbols:
-    products: # In this version of the application only the first product specified will be evaluated
-      - 102 # EVENTS
     symbolRegularExpressions:
       - .*NFL-W8* # NFL 'week 8' event contracts
     periods: # I, D, W, M, O

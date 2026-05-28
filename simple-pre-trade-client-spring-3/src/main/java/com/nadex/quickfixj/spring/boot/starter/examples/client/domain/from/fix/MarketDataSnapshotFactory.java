@@ -18,9 +18,6 @@ public class MarketDataSnapshotFactory {
         if (marketDataSnapshotFullRefresh.isSetSymbol()) {
             marketDataSnapshot.setSymbol(String.valueOf(marketDataSnapshotFullRefresh.getSymbol().getValue()));
         }
-        if (marketDataSnapshotFullRefresh.isSetMarketDepth()) {
-            marketDataSnapshot.setMarketDepth(String.valueOf(marketDataSnapshotFullRefresh.getMarketDepth().getValue()));
-        }
         if (marketDataSnapshotFullRefresh.isSetMDReqID()) {
             marketDataSnapshot.setMdReqId(String.valueOf(marketDataSnapshotFullRefresh.getMDReqID().getValue()));
         }

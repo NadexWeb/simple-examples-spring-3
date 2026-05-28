@@ -62,7 +62,6 @@ public class PositionReportFactory {
                 positionReport.getGroup(i, fixUnderlying);
                 PositionReport.Underlying underlying =
                         new PositionReport.Underlying(
-                           fixUnderlying.isSetUnderlyingSymbol() ? fixUnderlying.getUnderlyingSymbol().getValue(): null,
                            fixUnderlying.isSetUnderlyingSettlPrice() ? fixUnderlying.getUnderlyingSettlPrice().getValue(): null,
                            fixUnderlying.isSetUnderlyingSettlPriceType() ? fixUnderlying.getUnderlyingSettlPriceType().getValue(): null);
                 underlyings.add(underlying);
@@ -97,7 +96,7 @@ public class PositionReportFactory {
         positionReport.setClearingBusinessDate("2020-12-20");
         positionReport.setSymbol("Symbol");
         positionReport.setMaturityMonthYear("202510");
-        positionReport.setMaturityDay("28"); //TODO field 205 is not in FIX protocol ?
+        positionReport.setMaturityDay(28); //TODO field 205 is not in FIX protocol ?
         positionReport.setSettlPrice(new BigDecimal("100.0"));
         positionReport.setSettlPriceType(1);
         positionReport.setTotalNumPosReports(1);
@@ -105,7 +104,7 @@ public class PositionReportFactory {
             add(new Party("APartyID", 'D', 3));
         }});
         positionReport.setUnderlyings(new ArrayList<PositionReport.Underlying>() {{
-            add(new PositionReport.Underlying("AnUnderlyingSymbol", new BigDecimal("100.0"), 1));
+            add(new PositionReport.Underlying(new BigDecimal("100.0"), 1));
         }});
         positionReport.setPositionQtys(new ArrayList<PositionReport.PositionQty>() {{
             add(new PositionReport.PositionQty("TQ", new BigDecimal(10), new BigDecimal(0), 1));

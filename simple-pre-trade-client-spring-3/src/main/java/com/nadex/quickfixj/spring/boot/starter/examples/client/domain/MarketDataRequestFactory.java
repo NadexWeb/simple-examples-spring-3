@@ -15,10 +15,10 @@ public class MarketDataRequestFactory {
         marketDataRequest.set(new MDReqID(UUID.randomUUID().toString()));
         //request snapshot plus updates
         marketDataRequest.set(new SubscriptionRequestType(SubscriptionRequestType.SNAPSHOT_UPDATES));
-        marketDataRequest.set(new MDUpdateType(MDUpdateType.INCREMENTAL_REFRESH));
+        marketDataRequest.set(new MDUpdateType(1)); // Incremental refresh
         // Market Depth could have a type safe enumeration
         marketDataRequest.set(new MarketDepth(0));
-        marketDataRequest.set(new AggregatedBook(AggregatedBook.BOOK_ENTRIES_TO_BE_AGGREGATED));
+        marketDataRequest.set(new AggregatedBook(Boolean.TRUE));
         MarketDataRequest.NoRelatedSym noRelatedSym = new MarketDataRequest.NoRelatedSym();
         noRelatedSym.set(new Symbol(instrument.getSymbol()));
         marketDataRequest.addGroup(noRelatedSym);

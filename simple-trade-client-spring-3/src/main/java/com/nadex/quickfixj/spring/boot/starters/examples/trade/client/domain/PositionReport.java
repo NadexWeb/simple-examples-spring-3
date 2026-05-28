@@ -17,7 +17,7 @@ public class PositionReport extends Message {
     private List<Party> parties;
     private String symbol;
     private String maturityMonthYear;
-    private String maturityDay;
+    private Integer maturityDay;
     private BigDecimal settlPrice;
     private Integer settlPriceType;
     private String resettleIndicator;
@@ -30,7 +30,6 @@ public class PositionReport extends Message {
     @Data
     @AllArgsConstructor
     public static class Underlying {
-        private String underlyingSymbol;
         private BigDecimal underlyingSettlPrice;
         private Integer underlyingSettlPriceType;
     }

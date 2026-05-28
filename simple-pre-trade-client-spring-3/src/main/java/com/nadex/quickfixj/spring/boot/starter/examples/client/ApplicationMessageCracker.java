@@ -52,8 +52,6 @@ public class ApplicationMessageCracker extends MessageCracker {
 
     private final Set<String> underlyingSymbols = new HashSet<>();
 
-    private final Set<String> products = new HashSet<>();
-
     private final Set<String> securitySubTypes = new HashSet<>();
 
     private final Set<Pattern> symbolRegularExpressionPatterns = new HashSet<>();
@@ -72,8 +70,6 @@ public class ApplicationMessageCracker extends MessageCracker {
         if (null != filterProperties) {
             this.underlyingSymbols.addAll(filterProperties.getUnderlyingSymbols());
             this.underlyingSymbols.forEach(s -> log.info("Configured Filter Underlying Symbol {}", s));
-            this.products.addAll(filterProperties.getProducts());
-            this.products.forEach(s -> log.info("Configured Filter Product {}", s));
             this.securitySubTypes.addAll(filterProperties.getSecuritySubTypes());
             this.securitySubTypes.forEach(s -> log.info("Configured Filter SecuritySubType {}", s));
             this.periods.addAll(filterProperties.getPeriods());
@@ -123,7 +119,9 @@ public class ApplicationMessageCracker extends MessageCracker {
         int tradingSessionStatusValue = tradingSessionStatus.getTradSesStatus().getValue();
         log.info("received TradingSessionStatus: {}", tradingSessionStatusValue);
         if (TradSesStatus.OPEN != tradingSessionStatusValue) {
-            log.info("Session Status for {} is not OPEN, TradingSessionStatus: {}", tradingSessionStatus.getSymbol().getValue(), tradingSessionStatusValue);
+            log.info("Session Status for {} is not OPEN, TradingSessionStatus: {}",
+                    tradingSessionStatus.isSetSymbol() ? tradingSessionStatus.getSymbol().getValue(): "N/A",
+                    tradingSessionStatusValue);
         }
     }
 
@@ -220,13 +218,6 @@ public class ApplicationMessageCracker extends MessageCracker {
                 return Optional.empty();
             }
         }
-        // if products are configured, there must be a match
-        if (!this.products.isEmpty()) {
-            // products filter has been configured
-            if(!this.products.contains(product)) {
-                return Optional.empty();
-            }
-        }
         // if securitySubTypes are configured, there must be a match
         if (!this.securitySubTypes.isEmpty()) {
             // securitySubTypes filter has been configured
@@ -275,16 +266,10 @@ public class ApplicationMessageCracker extends MessageCracker {
      */
     private static Set<String> getMatchedUnderlyingSymbols(Set<String> underlyingSymbolsToMatch, SecurityList.NoRelatedSym noRelatedSymGroup) throws FieldNotFound {
         Set<String> matchedUnderlyingSymbols = new HashSet<>();
-        NoUnderlyings noUnderlyings = noRelatedSymGroup.getNoUnderlyings();
-        int underlyingIterations = noUnderlyings.getValue() + 1;
-        SecurityList.NoRelatedSym.NoUnderlyings noUnderlyingsGroup = new SecurityList.NoRelatedSym.NoUnderlyings();
-        for (int i = 1; i < underlyingIterations; i++) {
-            noRelatedSymGroup.getGroup(i, noUnderlyingsGroup);
-            if (noUnderlyingsGroup.isSetUnderlyingSymbol()) {
-                String underlyingSymbol = noUnderlyingsGroup.getUnderlyingSymbol().getValue();
-                if (underlyingSymbolsToMatch.contains(underlyingSymbol)) {
-                    matchedUnderlyingSymbols.add(underlyingSymbol);
-                }
+        if (noRelatedSymGroup.isSetSymbol()) {
+            String underlyingSymbol = noRelatedSymGroup.getSymbol().getValue();
+            if (underlyingSymbolsToMatch.contains(underlyingSymbol)) {
+                matchedUnderlyingSymbols.add(underlyingSymbol);
             }
         }
         return matchedUnderlyingSymbols;
